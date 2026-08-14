@@ -40,13 +40,21 @@
       </div>
 
       <!-- Düymələr -->
-      <div class="flex items-center space-x-3">
-        <button onclick="toggleModal('admin-modal')" class="bg-slate-900 hover:bg-slate-800 text-slate-300 hover:text-white px-4 py-2.5 rounded-2xl text-xs font-bold border border-slate-700/60 transition flex items-center space-x-2">
-          <i class="fa-solid fa-headset text-purple-400"></i>
-          <span class="hidden sm:inline">Admin Dəstək</span>
+      <div class="flex items-center space-x-2 sm:space-x-3">
+        <!-- Ətraflı Qaydalar Düyməsi -->
+        <button onclick="toggleModal('rules-modal')" class="bg-slate-900 hover:bg-slate-800 text-slate-300 hover:text-white px-3 sm:px-4 py-2.5 rounded-2xl text-xs font-bold border border-slate-700/60 transition flex items-center space-x-2">
+          <i class="fa-solid fa-book-bookmark text-amber-400"></i>
+          <span class="hidden sm:inline">Ətraflı Qaydalar</span>
         </button>
 
-        <button onclick="toggleModal('upload-modal')" class="bg-purple-600 hover:bg-purple-500 text-white px-5 py-2.5 rounded-2xl text-xs font-bold transition shadow-lg shadow-purple-600/30 flex items-center space-x-2">
+        <!-- Adminlə Çat Düyməsi -->
+        <button onclick="toggleModal('admin-modal')" class="bg-slate-900 hover:bg-slate-800 text-slate-300 hover:text-white px-3 sm:px-4 py-2.5 rounded-2xl text-xs font-bold border border-slate-700/60 transition flex items-center space-x-2">
+          <i class="fa-solid fa-headset text-purple-400"></i>
+          <span class="hidden sm:inline">Adminlə Çat</span>
+        </button>
+
+        <!-- Material Yüklə Düyməsi -->
+        <button onclick="toggleModal('upload-modal')" class="bg-purple-600 hover:bg-purple-500 text-white px-4 sm:px-5 py-2.5 rounded-2xl text-xs font-bold transition shadow-lg shadow-purple-600/30 flex items-center space-x-2">
           <i class="fa-solid fa-plus"></i>
           <span>Material Yüklə</span>
         </button>
@@ -74,6 +82,9 @@
           </p>
         </div>
       </div>
+      <button onclick="toggleModal('rules-modal')" class="hidden md:flex bg-purple-600/20 hover:bg-purple-600 text-purple-300 hover:text-white px-4 py-2 rounded-xl text-xs font-semibold border border-purple-500/40 transition whitespace-nowrap">
+        Qaydaları Oxu
+      </button>
     </div>
 
     <!-- 2. ƏSAS XƏBƏRDARLIQ / DƏLƏDUZLUQ VƏ CİNAYƏT MƏCƏLLƏSİ BANNERİ -->
@@ -112,7 +123,49 @@
     <p>© 2026 PDF Market. Bütün hüquqlar qorunur. AR Müəllif Hüquqları Qanunvericiliyinə uyğundur.</p>
   </footer>
 
-  <!-- MODAL: MƏHSUL YÜKLƏMƏ PƏNCƏRƏSİ -->
+  <!-- MODAL 1: ƏTRAFLI QAYDALAR PƏNCƏRƏSİ -->
+  <div id="rules-modal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-4 z-50 hidden">
+    <div class="bg-slate-900 border border-slate-800 w-full max-w-2xl rounded-3xl p-6 relative shadow-2xl space-y-4 max-h-[85vh] flex flex-col">
+      <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+        <h3 class="text-base font-bold text-white flex items-center space-x-2">
+          <i class="fa-solid fa-book-bookmark text-amber-400"></i>
+          <span>Platformadan İstifadə Və Satış Qaydaları</span>
+        </h3>
+        <button onclick="toggleModal('rules-modal')" class="text-slate-400 hover:text-white text-lg">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <div class="flex-1 overflow-y-auto space-y-4 text-xs text-slate-300 pr-2 leading-relaxed">
+        <div class="bg-slate-950 border border-slate-800 p-4 rounded-2xl space-y-2">
+          <h4 class="font-bold text-purple-400 flex items-center gap-2">
+            <i class="fa-solid fa-shield-cat"></i> 1. Müəllif Hüquqları Və Təkrar Satış Qadağası
+          </h4>
+          <p>Sistemdə yüklənən hər bir PDF faylının müəlliflik hüququ onun ilkin sahibinə aiddir. Başqasından satın alınan PDF faylını yenidən sayta yükləmək və ya daha ucuz qiymətə satmaq qəti qadağandır. Sistem dublikat faylları avtomatik təsbit edir və yükləməyə imkan vermir.</p>
+        </div>
+
+        <div class="bg-slate-950 border border-slate-800 p-4 rounded-2xl space-y-2">
+          <h4 class="font-bold text-emerald-400 flex items-center gap-2">
+            <i class="fa-solid fa-percent"></i> 2. 0% Komissiya Və Birbaşa Ödəniş
+          </h4>
+          <p>Platformamız komissiyasız fəaliyyət gösterir. Alıcı ödənişi birbaşa satıcının şəxsi bank kartına edir. Satıcı ödəniş qəbzini təsdiqlədikdən sonra PDF avtomatik yüklənir.</p>
+        </div>
+
+        <div class="bg-slate-950 border border-slate-800 p-4 rounded-2xl space-y-2">
+          <h4 class="font-bold text-rose-400 flex items-center gap-2">
+            <i class="fa-solid fa-gavel"></i> 3. Cinayət Məsuliyyəti Və Şikayətlər
+          </h4>
+          <p>Saxta ödəniş qəbzi göndərmək və ya ödəniş alıb faylı təqdim etməmək AR Cinayət Məcəlləsinin 178-ci maddəsinə əsasən dələduzluq sayılır. Bütün əməliyyatlarda IP ünvanlar bazada saxlanılır.</p>
+        </div>
+      </div>
+
+      <button onclick="toggleModal('rules-modal')" class="w-full bg-slate-800 hover:bg-slate-700 text-white font-bold py-3 rounded-2xl text-xs transition">
+        Anladım
+      </button>
+    </div>
+  </div>
+
+  <!-- MODAL 2: MƏHSUL YÜKLƏMƏ PƏNCƏRƏSİ -->
   <div id="upload-modal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-4 z-50 hidden">
     <div class="bg-slate-900 border border-slate-800 w-full max-w-lg rounded-3xl p-6 relative shadow-2xl space-y-4">
       <button onclick="toggleModal('upload-modal')" class="absolute top-4 right-4 text-slate-400 hover:text-white text-lg">
@@ -158,7 +211,7 @@
     </div>
   </div>
 
-  <!-- MODAL: ALICI / SATICI ÇAT PƏNCƏRƏSİ -->
+  <!-- MODAL 3: ALICI / SATICI ÇAT PƏNCƏRƏSİ -->
   <div id="chat-modal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-4 z-50 hidden">
     <div class="bg-slate-900 border border-slate-800 w-full max-w-xl rounded-3xl p-6 relative shadow-2xl flex flex-col h-[85vh]">
       
@@ -213,7 +266,7 @@
     </div>
   </div>
 
-  <!-- MODAL: ADMIN ÇAT PƏNCƏRƏSİ -->
+  <!-- MODAL 4: ADMIN ÇAT PƏNCƏRƏSİ -->
   <div id="admin-modal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-4 z-50 hidden">
     <div class="bg-slate-900 border border-slate-800 w-full max-w-md rounded-3xl p-6 relative shadow-2xl flex flex-col h-[70vh]">
       <div class="flex items-center justify-between border-b border-slate-800 pb-3">
