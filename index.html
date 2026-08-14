@@ -3,243 +3,255 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>DigitalMarket - Təhlükəsiz PDF Platforması</title>
+  <title>PDF Satış Və Paylaşım Platforması</title>
   
+  <!-- Tailwind CSS Və FontAwesome İkonları -->
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   
-  <!-- FIREBASE BAZA KITABXANALARI -->
-  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
-
+  <!-- Custom Styles -->
   <style>
+    body {
+      background-color: #020617;
+      color: #f8fafc;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    }
     .glass {
-      background: rgba(15, 23, 42, 0.85);
+      background: rgba(15, 23, 42, 0.75);
       backdrop-filter: blur(16px);
-      border: 1px solid rgba(255, 255, 255, 0.08);
+      -webkit-backdrop-filter: blur(16px);
     }
-    .gradient-text {
-      background: linear-gradient(135deg, #a855f7 0%, #ec4899 50%, #3b82f6 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-    }
-    .custom-scrollbar::-webkit-scrollbar { width: 6px; }
-    .custom-scrollbar::-webkit-scrollbar-thumb { background: #334155; border-radius: 10px; }
   </style>
 </head>
-<body class="bg-slate-950 text-slate-100 font-sans min-h-screen flex flex-col custom-scrollbar">
+<body class="min-h-screen flex flex-col justify-between selection:bg-purple-500 selection:text-white">
 
-  <!-- RƏSMİ TƏHLÜKƏSİZLİK BANERİ (POLİS İZLƏMƏSİ XƏBƏRDARLIĞI) -->
-  <div class="bg-rose-950/90 border-b border-rose-600/50 px-4 py-2 text-center text-xs text-rose-200 font-semibold flex items-center justify-center space-x-2">
-    <i class="fa-solid fa-shield-cat text-rose-400 text-sm animate-pulse"></i>
-    <span>DƏLƏDUZLUĞA QARŞI XƏBƏRDARLIQ: Bu platformada bütün əməliyyatlar və IP ünvanlar qeydə alınır. Dələduzluq halları dərhal Hüquq-Mühafizə Organlarına (Polisə) təqdim olunur!</span>
-  </div>
-
-  <!-- NAVBAR -->
-  <nav class="glass sticky top-0 z-40 px-6 py-4 flex justify-between items-center border-b border-slate-800/80 shadow-2xl">
-    <div class="flex items-center space-x-3 cursor-pointer" onclick="window.scrollTo({top: 0, behavior: 'smooth'})">
-      <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-purple-600 to-pink-500 flex items-center justify-center shadow-lg shadow-purple-500/30">
-        <i class="fa-solid fa-file-pdf text-white text-xl"></i>
+  <!-- TOP HEADER / NAVİQASİYA -->
+  <header class="sticky top-0 z-40 glass border-b border-slate-800">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+      
+      <!-- Logo -->
+      <div class="flex items-center space-x-3">
+        <div class="w-10 h-10 bg-purple-600 rounded-2xl flex items-center justify-center shadow-lg shadow-purple-600/30 text-white font-bold text-xl">
+          <i class="fa-solid fa-file-pdf"></i>
+        </div>
+        <div>
+          <h1 class="text-lg font-black tracking-tight text-white">PDF Market</h1>
+          <p class="text-[10px] text-purple-400 font-semibold tracking-widest uppercase">Təhlükəsiz Satış Platforması</p>
+        </div>
       </div>
-      <span class="text-2xl font-black tracking-wider gradient-text">DigitalMarket</span>
-    </div>
 
-    <div class="flex items-center space-x-3">
-      <button onclick="toggleModal('rules-modal')" class="bg-slate-900/80 hover:bg-slate-800 text-slate-300 border border-slate-700/60 px-4 py-2 rounded-xl text-xs md:text-sm font-medium transition flex items-center space-x-2">
-        <i class="fa-solid fa-scale-balanced text-amber-400"></i>
-        <span>Qaydalar və Məsuliyyət</span>
-      </button>
+      <!-- Düymələr -->
+      <div class="flex items-center space-x-3">
+        <button onclick="toggleModal('admin-modal')" class="bg-slate-900 hover:bg-slate-800 text-slate-300 hover:text-white px-4 py-2.5 rounded-2xl text-xs font-bold border border-slate-700/60 transition flex items-center space-x-2">
+          <i class="fa-solid fa-headset text-purple-400"></i>
+          <span class="hidden sm:inline">Admin Dəstək</span>
+        </button>
 
-      <button onclick="toggleModal('upload-modal')" class="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 text-white font-semibold px-4 py-2 rounded-xl text-xs md:text-sm shadow-lg shadow-purple-600/30 transition transform hover:scale-105 flex items-center space-x-2">
-        <i class="fa-solid fa-plus"></i>
-        <span>PDF Satışa Çıxar</span>
-      </button>
-    </div>
-  </nav>
+        <button onclick="toggleModal('upload-modal')" class="bg-purple-600 hover:bg-purple-500 text-white px-5 py-2.5 rounded-2xl text-xs font-bold transition shadow-lg shadow-purple-600/30 flex items-center space-x-2">
+          <i class="fa-solid fa-plus"></i>
+          <span>Material Yüklə</span>
+        </button>
+      </div>
 
-  <!-- HERO SECTION -->
-  <header class="py-10 text-center px-4 max-w-4xl mx-auto">
-    <div class="inline-flex items-center space-x-2 bg-emerald-500/10 border border-emerald-500/20 px-4 py-1.5 rounded-full text-xs font-semibold text-emerald-300 mb-4">
-      <i class="fa-solid fa-lock text-emerald-400"></i>
-      <span>Canlı Baza Və İzlənilən Təhlükəsiz Sistem</span>
     </div>
-    <h1 class="text-3xl md:text-5xl font-black text-white tracking-tight mb-3">Rəqəmsal Kitab Və Material Platforması</h1>
-    <p class="text-xs md:text-sm text-slate-400 max-w-2xl mx-auto">
-      Ödənişləri birbaşa satıcının kartına edin və qəbzi çata yükleyin. Dələduzluq halında şəxsiyyət və bank məlumatları dərhal polisə təqdim edilir.
-    </p>
   </header>
 
-  <!-- MƏHSULLAR VİTRİNİ -->
-  <main class="max-w-7xl mx-auto px-6 py-6 flex-1 w-full">
-    <div class="flex justify-between items-center mb-6">
-      <h2 class="text-xl font-bold text-white flex items-center space-x-2">
-        <i class="fa-solid fa-store text-purple-400"></i>
-        <span>Satışda Olan Materiallar</span>
-      </h2>
-      <span class="text-xs text-slate-400" id="product-count">0 material</span>
+  <!-- ƏSAS MENYU VƏ MÜƏLLİF HÜQUQLARI BİLDİRİŞİ -->
+  <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-6">
+
+    <!-- BANNED / ANNOUNCEMENT BOX -->
+    <div class="bg-purple-950/40 border border-purple-500/30 backdrop-blur-md rounded-3xl p-4 sm:p-5 flex items-center justify-between shadow-xl">
+      <div class="flex items-center space-x-4">
+        <div class="w-12 h-12 bg-purple-600/20 text-purple-400 rounded-2xl flex items-center justify-center border border-purple-500/30 shrink-0 text-xl">
+          <i class="fa-solid fa-shield-halved"></i>
+        </div>
+        <div>
+          <h4 class="text-sm sm:text-base font-bold text-white flex items-center gap-2">
+            <span>Müəllif hüquqları tam qorunur</span>
+            <span class="bg-emerald-500/20 text-emerald-400 text-[10px] px-2.5 py-0.5 rounded-full border border-emerald-500/30 font-semibold">Sistem Aktivdir</span>
+          </h4>
+          <p class="text-xs text-slate-300 mt-1">
+            Eyni fayl ikinci dəfə paylaşıla bilməz! Baza avtomatik dublikat faylları bloklayır və müəllif hüquqlarını qoruyur.
+          </p>
+        </div>
+      </div>
     </div>
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8" id="products-grid"></div>
+
+    <!-- BAŞLIQ VA SAYĞAC -->
+    <div class="flex items-center justify-between">
+      <div>
+        <h2 class="text-2xl font-black text-white tracking-tight">Satışdakı Materiallar</h2>
+        <p class="text-xs text-slate-400 mt-1">Bütün PDF-lər birbaşa müəlliflər tərəfindən yerləşdirilir.</p>
+      </div>
+      <span id="product-count" class="bg-slate-900 border border-slate-800 text-purple-400 text-xs font-bold px-4 py-2 rounded-2xl">0 material</span>
+    </div>
+
+    <!-- MƏHSULLAR QORİDİ (GRID) -->
+    <div id="products-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+      <!-- Məhsullar script.js vasitəsilə bura yüklənir -->
+    </div>
+
   </main>
 
-  <!-- ADMIN / DƏSTƏK ÇATI DÜYMƏSİ (ÜZƏN) -->
-  <button onclick="toggleModal('admin-chat-modal')" class="fixed bottom-6 right-6 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white p-4 rounded-full shadow-2xl z-40 transition transform hover:scale-110 flex items-center space-x-2 border border-blue-400/40">
-    <i class="fa-solid fa-headset text-xl"></i>
-    <span class="text-xs font-bold hidden md:inline">Adminlə Çat / Şikayət</span>
-  </button>
+  <!-- FOOTER -->
+  <footer class="border-t border-slate-800 py-6 text-center text-xs text-slate-500">
+    <p>© 2026 PDF Market. Bütün hüquqlar qorunur. AR Müəllif Hüquqları Qanunvericiliyinə uyğundur.</p>
+  </footer>
 
-  <!-- QAYDALAR VƏ HÜQUQİ MƏSULİYYƏT MODALI (ƏTRAFLI) -->
-  <div id="rules-modal" class="fixed inset-0 bg-black/80 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
-    <div class="glass max-w-2xl w-full p-6 md:p-8 rounded-3xl relative border border-slate-700 max-h-[90vh] overflow-y-auto custom-scrollbar">
-      <button onclick="toggleModal('rules-modal')" class="absolute top-5 right-5 text-slate-400 hover:text-white text-xl">
+  <!-- MODAL: MƏHSUL YÜKLƏMƏ PƏNCƏRƏSİ -->
+  <div id="upload-modal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-4 z-50 hidden">
+    <div class="bg-slate-900 border border-slate-800 w-full max-w-lg rounded-3xl p-6 relative shadow-2xl space-y-4">
+      <button onclick="toggleModal('upload-modal')" class="absolute top-4 right-4 text-slate-400 hover:text-white text-lg">
         <i class="fa-solid fa-xmark"></i>
       </button>
 
-      <div class="flex items-center space-x-3 text-rose-500 mb-4">
-        <i class="fa-solid fa-gavel text-2xl"></i>
-        <h2 class="text-2xl font-black text-white">Platforma Qaydaları Və Hüquqi Xəbərdarlıq</h2>
-      </div>
+      <h3 class="text-lg font-bold text-white flex items-center space-x-2">
+        <i class="fa-solid fa-cloud-arrow-up text-purple-500"></i>
+        <span>Yeni PDF Material Əlavə Et</span>
+      </h3>
 
-      <div class="space-y-4 text-xs md:text-sm text-slate-300">
-        <div class="bg-rose-950/40 border border-rose-500/30 p-4 rounded-2xl">
-          <h3 class="font-bold text-rose-400 mb-1"><i class="fa-solid fa-triangle-exclamation mr-1"></i> Dələduzluq Halında Nə Olacaq?</h3>
-          <p class="leading-relaxed">
-            Satıcı alıcıdan ödənişi alıb materialı göndərməzsə və ya saxta material təqdim edərsə, bu əməl <strong>AR Cinayət Məcəlləsinin 178-ci maddəsi (Dələduzluq)</strong> tərkibi yaradır.
-          </p>
+      <form id="upload-form" onsubmit="handlePDFUpload(event)" class="space-y-3">
+        <div>
+          <label class="block text-xs font-semibold text-slate-400 mb-1">Materialın Başlığı</label>
+          <input type="text" id="pdf-title" required placeholder="Məs: İngilis Dili Qrammatika PDF" class="w-full bg-slate-950 border border-slate-800 rounded-2xl px-4 py-3 text-xs text-white focus:outline-none focus:border-purple-500">
         </div>
 
-        <h3 class="font-bold text-white text-base">Əsas Təhlükəsizlik Qaydaları:</h3>
-        <ul class="list-disc pl-5 space-y-2">
-          <li><strong>Qeydiyyat Və İzləmə:</strong> Saytda satıcının daxil etdiyi 16 rəqəmli kart nömrəsi, IP ünvanı və əməliyyat vaxtı bazada arxivlənir.</li>
-          <li><strong>Polisə Şikayət Proseduru:</strong> Dələduzluq baş verdikdə alıcının çat qəbzilə birlikdə Adminə şikayət etməsi yetərlidir. Bütün loglar (IP, Kart nömrəsi, çat yazışması) dərhal rəsmi şəkildə Daxili İşlər Nazirliyinin Kibercinayətkarlıqla Mübarizə Baş İdarəsinə təqdim edilir.</li>
-          <li><strong>Ödəniş Təsdiqi:</strong> Ödənişi yalnız çata qəbz göndərdikdən sonra gözləyin. Ödəniş etmədən saxta qəbz atan alıcıların da hesabı bloklanacaqdır.</li>
-        </ul>
-
-        <div class="bg-slate-900 p-4 rounded-2xl border border-slate-800">
-          <p class="text-xs text-slate-400">
-            * Qeyd: Platforma P2P (şəxsdən-şəxsə) vasitəçilik edir. Yaranan mübahisələrdə inzibatçılıq logları hüquq-mühafizə orqanlarına ötürmək öhdəliyini üzərinə götürür.
-          </p>
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-xs font-semibold text-slate-400 mb-1">Müəllif Adı</label>
+            <input type="text" id="pdf-author" required placeholder="Məs: Əli Məmmədov" class="w-full bg-slate-950 border border-slate-800 rounded-2xl px-4 py-3 text-xs text-white focus:outline-none focus:border-purple-500">
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-slate-400 mb-1">Qiymət (AZN)</label>
+            <input type="number" step="0.1" id="pdf-price" required placeholder="Məs: 9" class="w-full bg-slate-950 border border-slate-800 rounded-2xl px-4 py-3 text-xs text-white focus:outline-none focus:border-purple-500">
+          </div>
         </div>
-      </div>
 
-      <button onclick="toggleModal('rules-modal')" class="w-full mt-6 bg-purple-600 hover:bg-purple-500 text-white font-bold py-3 rounded-xl text-sm transition">
-        Anladım Və Qaydaları Qəbul Edirəm
-      </button>
-    </div>
-  </div>
+        <div>
+          <label class="block text-xs font-semibold text-slate-400 mb-1">Ödəniş Qəbul Ediləcək Kart Nömrəsi</label>
+          <input type="text" id="seller-card" required placeholder="16 rəqəmli kart nömrəsi" class="w-full bg-slate-950 border border-slate-800 rounded-2xl px-4 py-3 text-xs text-white focus:outline-none focus:border-purple-500 font-mono">
+        </div>
 
-  <!-- PDF YÜKLƏMƏ MODALI -->
-  <div id="upload-modal" class="fixed inset-0 bg-black/80 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
-    <div class="glass max-w-md w-full p-6 rounded-3xl relative border border-slate-700">
-      <button onclick="toggleModal('upload-modal')" class="absolute top-4 right-4 text-slate-400 hover:text-white text-xl">
-        <i class="fa-solid fa-xmark"></i>
-      </button>
-      <h2 class="text-xl font-bold mb-4 text-purple-400">Yeni PDF Satışa Çıxar</h2>
-      <form id="upload-form" onsubmit="handlePDFUpload(event)" class="space-y-4">
-        <input type="text" id="pdf-title" required placeholder="Materialın Adı" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-purple-500">
-        <input type="text" id="pdf-author" required placeholder="Satıcı / Müəllif Adı" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-purple-500">
-        <input type="text" id="seller-card" required maxlength="16" placeholder="Kart Nömrəniz (16 Rəqəm)" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-2.5 text-sm font-mono text-amber-400 focus:outline-none focus:border-purple-500">
-        <input type="number" id="pdf-price" required min="1" step="0.5" placeholder="Qiymət (AZN)" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-purple-500">
-        <input type="file" id="pdf-file" accept=".pdf" required class="w-full text-xs text-slate-400 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:bg-purple-600 file:text-white file:cursor-pointer">
-        <button type="submit" class="w-full bg-gradient-to-r from-purple-600 to-pink-600 text-white font-bold py-3 rounded-xl transition hover:opacity-90">Satışa Çıxar</button>
+        <div>
+          <label class="block text-xs font-semibold text-slate-400 mb-1">PDF Faylı Yüklə</label>
+          <input type="file" id="pdf-file" accept="application/pdf" required class="w-full text-xs text-slate-400 file:mr-4 file:py-2.5 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-purple-600 file:text-white hover:file:bg-purple-500 cursor-pointer">
+        </div>
+
+        <button type="submit" class="w-full bg-purple-600 hover:bg-purple-500 text-white font-bold py-3 rounded-2xl text-xs transition shadow-lg shadow-purple-600/30">
+          Satışa Çıxar
+        </button>
       </form>
     </div>
   </div>
 
-  <!-- ALICI VƏ SATICI ÇAT MODALI -->
-  <div id="chat-modal" class="fixed inset-0 bg-black/85 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
-    <div class="glass max-w-lg w-full rounded-3xl border border-slate-700 overflow-hidden flex flex-col h-[600px] max-h-[90vh]">
-      <div class="bg-slate-900 px-6 py-4 border-b border-slate-800 flex justify-between items-center">
+  <!-- MODAL: ALICI / SATICI ÇAT PƏNCƏRƏSİ -->
+  <div id="chat-modal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-4 z-50 hidden">
+    <div class="bg-slate-900 border border-slate-800 w-full max-w-xl rounded-3xl p-6 relative shadow-2xl flex flex-col h-[85vh]">
+      
+      <!-- Çat Header -->
+      <div class="flex items-center justify-between border-b border-slate-800 pb-4">
         <div>
-          <h3 class="font-bold text-white text-base" id="chat-product-title">Material Adı</h3>
-          <p class="text-xs text-purple-400" id="chat-seller-name">Satıcı: -</p>
+          <h3 id="chat-product-title" class="text-sm font-bold text-white line-clamp-1">Məhsul Başlığı</h3>
+          <p id="chat-seller-name" class="text-xs text-purple-400">Müəllif: -</p>
         </div>
-        <button onclick="toggleModal('chat-modal')" class="text-slate-400 hover:text-white text-xl"><i class="fa-solid fa-xmark"></i></button>
-      </div>
-
-      <div class="bg-purple-950/40 p-4 border-b border-slate-800 space-y-2">
-        <div class="text-xs text-slate-300">Ödənişi bu karta edin: <span id="chat-price" class="font-bold text-amber-400">0 AZN</span></div>
-        <div class="bg-slate-950 p-2.5 rounded-xl font-mono text-center text-amber-400 font-bold text-sm border border-slate-800 flex justify-between items-center">
-          <span id="chat-card-number">4169 XXXX XXXX XXXX</span>
-          <i class="fa-regular fa-copy cursor-pointer hover:text-white text-xs" onclick="copyCard()"></i>
-        </div>
-      </div>
-
-      <div class="flex-1 p-4 overflow-y-auto custom-scrollbar space-y-3" id="chat-messages"></div>
-
-      <div class="bg-slate-950 px-4 py-2 border-t border-slate-800 flex justify-between items-center text-xs">
-        <span class="text-slate-400">Məhsulun satıcısısınız?</span>
-        <button onclick="toggleSellerLogin()" class="text-purple-400 font-bold underline"><i class="fa-solid fa-lock mr-1"></i> Satıcı Paneline Giriş</button>
-      </div>
-
-      <div id="seller-action-panel" class="bg-slate-900 p-3 border-t border-slate-800 space-y-2 hidden">
-        <div class="grid grid-cols-2 gap-2">
-          <button onclick="sellerApprove()" class="bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold py-2.5 rounded-xl transition"><i class="fa-solid fa-check mr-1"></i> Qəbz Keçərlidir</button>
-          <button onclick="sellerRejectPrompt()" class="bg-rose-600 hover:bg-rose-500 text-white text-xs font-bold py-2.5 rounded-xl transition"><i class="fa-solid fa-xmark mr-1"></i> Qəbz Keçərsizdir</button>
+        <div class="flex items-center space-x-2">
+          <button onclick="toggleSellerLogin()" class="bg-amber-600/20 text-amber-400 border border-amber-500/30 px-3 py-1.5 rounded-xl text-xs font-bold hover:bg-amber-600 hover:text-white transition">
+            <i class="fa-solid fa-user-shield mr-1"></i> Satıcı Paneli
+          </button>
+          <button onclick="toggleModal('chat-modal')" class="text-slate-400 hover:text-white text-lg ml-2">
+            <i class="fa-solid fa-xmark"></i>
+          </button>
         </div>
       </div>
 
-      <div id="buyer-input-panel" class="p-3 bg-slate-900 border-t border-slate-800 flex items-center space-x-2">
-        <input type="file" id="receipt-input" accept="image/*" class="hidden" onchange="sendReceiptMessage(event)">
-        <button onclick="document.getElementById('receipt-input').click()" class="bg-purple-600 hover:bg-purple-500 text-white px-4 py-2.5 rounded-xl text-xs font-semibold w-full flex items-center justify-center space-x-1 transition">
-          <i class="fa-solid fa-paperclip"></i><span>Ödəniş Qəbzinin Şəklini At</span>
-        </button>
+      <!-- Kart Məlumatları -->
+      <div class="bg-slate-950 border border-slate-800 rounded-2xl p-3 my-3 flex items-center justify-between">
+        <div>
+          <span class="text-[10px] text-slate-400 uppercase tracking-widest block">Ödəniş Ediləcək Kart</span>
+          <span id="chat-card-number" class="text-sm font-black text-emerald-400 font-mono">0000 0000 0000 0000</span>
+        </div>
+        <div class="flex items-center space-x-2">
+          <span id="chat-price" class="text-sm font-bold text-white bg-slate-900 px-3 py-1 rounded-xl border border-slate-800">0 AZN</span>
+          <button onclick="copyCard()" class="bg-slate-800 hover:bg-slate-700 text-slate-200 px-3 py-1.5 rounded-xl text-xs font-bold transition">
+            <i class="fa-solid fa-copy"></i>
+          </button>
+        </div>
       </div>
+
+      <!-- Çat Mesajları Hissəsi -->
+      <div id="chat-messages" class="flex-1 overflow-y-auto space-y-3 pr-2 my-2">
+        <!-- Mesajlar dinamik daxil olunur -->
+      </div>
+
+      <!-- Satıcı Rejimi İdarəetmə Paneli (Gizli Başlayır) -->
+      <div id="seller-action-panel" class="hidden border-t border-slate-800 pt-3">
+        <!-- Düymələr JavaScript-dən yüklənir -->
+      </div>
+
+      <!-- Qəbz Göndərmə Hissəsi -->
+      <div class="border-t border-slate-800 pt-3 flex items-center space-x-2">
+        <label class="flex-1 bg-purple-600 hover:bg-purple-500 text-white font-bold py-3 rounded-2xl text-xs text-center cursor-pointer transition shadow-lg shadow-purple-600/20">
+          <i class="fa-solid fa-receipt mr-1"></i> Ödəniş Qəbzinin Şəklini Yüklə
+          <input type="file" accept="image/*" onchange="sendReceiptMessage(event)" class="hidden">
+        </label>
+      </div>
+
     </div>
   </div>
 
-  <!-- ADMIN / DƏSTƏK ÇATI MODALI -->
-  <div id="admin-chat-modal" class="fixed inset-0 bg-black/85 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
-    <div class="glass max-w-md w-full rounded-3xl border border-blue-500/40 overflow-hidden flex flex-col h-[550px]">
-      <div class="bg-blue-950/80 px-6 py-4 border-b border-blue-800 flex justify-between items-center">
-        <div class="flex items-center space-x-2">
-          <i class="fa-solid fa-headset text-blue-400 text-lg"></i>
-          <div>
-            <h3 class="font-bold text-white text-sm">Admin / Dəstək Xidməti</h3>
-            <p class="text-[10px] text-blue-300">Dələduzluq şikayəti və ya kömək üçün yazın</p>
-          </div>
-        </div>
-        <button onclick="toggleModal('admin-chat-modal')" class="text-slate-400 hover:text-white text-xl"><i class="fa-solid fa-xmark"></i></button>
+  <!-- MODAL: ADMIN ÇAT PƏNCƏRƏSİ -->
+  <div id="admin-modal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-4 z-50 hidden">
+    <div class="bg-slate-900 border border-slate-800 w-full max-w-md rounded-3xl p-6 relative shadow-2xl flex flex-col h-[70vh]">
+      <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+        <h3 class="text-sm font-bold text-white flex items-center space-x-2">
+          <i class="fa-solid fa-headset text-purple-400"></i>
+          <span>Admin Şikayət Və Dəstək</span>
+        </h3>
+        <button onclick="toggleModal('admin-modal')" class="text-slate-400 hover:text-white text-lg">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
       </div>
 
-      <div class="flex-1 p-4 overflow-y-auto custom-scrollbar space-y-3" id="admin-chat-messages">
-        <div class="bg-blue-900/40 border border-blue-500/30 p-3 rounded-2xl text-xs text-blue-100">
-          👋 <strong>Admin Dəstək:</strong> Salam! Hər hansı dələduzluq halı ilə qarşılaşmısınızsa və ya sualınız varsa, buradan bizə yazın. Şikayətlərə dərhal baxılır!
-        </div>
+      <div id="admin-chat-messages" class="flex-1 overflow-y-auto space-y-3 py-3 pr-1">
+        <!-- Admin canlı çat mesajları -->
       </div>
 
-      <form onsubmit="sendAdminMessage(event)" class="p-3 bg-slate-900 border-t border-slate-800 flex items-center space-x-2">
-        <input type="text" id="admin-msg-input" required placeholder="Mesajınızı yazın..." class="flex-1 bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-blue-500">
-        <button type="submit" class="bg-blue-600 hover:bg-blue-500 text-white px-4 py-2 rounded-xl text-xs font-bold transition">
+      <form onsubmit="sendAdminMessage(event)" class="flex space-x-2 pt-2 border-t border-slate-800">
+        <input type="text" id="admin-msg-input" placeholder="Mesajınızı yazın..." class="flex-1 bg-slate-950 border border-slate-800 rounded-2xl px-4 py-2.5 text-xs text-white focus:outline-none focus:border-purple-500">
+        <button type="submit" class="bg-purple-600 hover:bg-purple-500 text-white px-4 py-2.5 rounded-2xl text-xs font-bold transition">
           <i class="fa-solid fa-paper-plane"></i>
         </button>
       </form>
     </div>
   </div>
 
-  <!-- TOAST BİLDİRİŞİ -->
-  <div id="toast" class="fixed bottom-5 left-5 hidden bg-purple-600 text-white px-6 py-3 rounded-2xl shadow-2xl flex items-center space-x-3 transition z-50">
-    <i class="fa-solid fa-circle-check text-xl"></i>
-    <span id="toast-message">Əməliyyat tamamlandı!</span>
+  <!-- TOAST NOTIFICATION -->
+  <div id="toast" class="fixed bottom-5 right-5 bg-purple-600 text-white text-xs font-bold px-5 py-3 rounded-2xl shadow-2xl hidden z-50 transition">
+    <span id="toast-message">Məlumat</span>
   </div>
 
-  <!-- FIREBASE KONFİQURASİYASI -->
+  <!-- FIREBASE SDK (REAL-TIME DATABASE) -->
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+
+  <!-- FIREBASE CONFIGURATION (BURAYA ÖZ FIREBASE MƏLUMATLARINIZI YAZIN) -->
   <script>
     const firebaseConfig = {
-      apiKey: "AIzaSyAzs6jM1HbCCpuC79AyNdOvCWNuT45_5lU",
-      authDomain: "magaza-f54b4.firebaseapp.com",
-      databaseURL: "https://magaza-f54b4-default-rtdb.europe-west1.firebasedatabase.app",
-      projectId: "magaza-f54b4",
-      storageBucket: "magaza-f54b4.firebasestorage.app",
-      messagingSenderId: "366567781249",
-      appId: "1:366567781249:web:c824506c992445d330ae80",
-      measurementId: "G-YH4VSK6501"
+      apiKey: "YOUR_API_KEY",
+      authDomain: "YOUR_PROJECT.firebaseapp.com",
+      databaseURL: "https://YOUR_PROJECT-default-rtdb.firebaseio.com",
+      projectId: "YOUR_PROJECT",
+      storageBucket: "YOUR_PROJECT.appspot.com",
+      messagingSenderId: "123456789",
+      appId: "YOUR_APP_ID"
     };
-
+    
+    // Firebase təşəbbüsü
     firebase.initializeApp(firebaseConfig);
     const database = firebase.database();
   </script>
-  
+
+  <!-- SİZİN ƏSƏRİNİZ OLAN SCRIPT.JS FAYLI -->
   <script src="script.js"></script>
 </body>
-        </html>
-        
+</html>
