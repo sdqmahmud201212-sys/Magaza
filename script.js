@@ -1,4 +1,3 @@
-// İLKİN MƏHSUL BAZASI (LocalStorage təminatı ilə)
 let defaultProducts = [
   {
     id: 1,
@@ -11,21 +10,19 @@ let defaultProducts = [
   }
 ];
 
-// Məhsulları yaddaşdan (LocalStorage) oxu və ya susmaya görə təyin et
 let products = JSON.parse(localStorage.getItem("market_products")) || defaultProducts;
 let activeProduct = null;
+let isSellerAuthenticated = false; // Satıcı girişi idarəsi
 
 document.addEventListener("DOMContentLoaded", () => {
   renderProducts();
 });
 
-// MODALI AÇIB BAĞLAMAQ
 function toggleModal(modalId) {
   const modal = document.getElementById(modalId);
   if(modal) modal.classList.toggle("hidden");
 }
 
-// MƏHSULLARI EKRANA ÇIXARMAQ
 function renderProducts() {
   const grid = document.getElementById("products-grid");
   const countElem = document.getElementById("product-count");
@@ -35,11 +32,7 @@ function renderProducts() {
   if(countElem) countElem.innerText = `${products.length} material`;
 
   if(products.length === 0) {
-    grid.innerHTML = `
-      <div class="col-span-full text-center py-12 text-slate-500">
-        Hələ ki satışda heç bir material yoxdur. İlk PDF-inizi siz yükləyin!
-      </div>
-    `;
+    grid.innerHTML = `<div class="col-span-full text-center py-12 text-slate-500">Hələ ki satışda heç bir material yoxdur.</div>`;
     return;
   }
 
@@ -48,8 +41,7 @@ function renderProducts() {
     card.className = "glass rounded-3xl overflow-hidden shadow-xl border border-slate-800 flex flex-col justify-between hover:border-purple-500/50 transition duration-300 group relative";
 
     card.innerHTML = `
-      <!-- SİLMƏ DÜYMƏSİ (SATICI ÜÇÜN) -->
-      <button onclick="deleteProduct(${product.id})" class="absolute top-3 left-3 bg-rose-600/80 hover:bg-rose-600 text-white w-8 h-8 rounded-full flex items-center justify-center transition z-10 shadow-lg" title="Materialı Sil">
+      <button onclick="deleteProductWithAuth(${product.id})" class="absolute top-3 left-3 bg-rose-600/80 hover:bg-rose-600 text-white w-8 h-8 rounded-full flex items-center justify-center transition z-10 shadow-lg" title="Materialı Sil">
         <i class="fa-solid fa-trash-can text-xs"></i>
       </button>
 
@@ -76,23 +68,28 @@ function renderProducts() {
   });
 }
 
-// MATERIALI SİLMƏK (DELETE)
-function deleteProduct(productId) {
-  if (confirm("Bu materialı silmək istədiyinizdən əminsiniz?")) {
+// SİLMƏK ÜÇÜN KART NÖMRƏSİ TƏLƏB ET
+function deleteProductWithAuth(productId) {
+  const prod = products.find(p => p.id === productId);
+  if(!prod) return;
+
+  const cardInput = prompt("Materialı silmək üçün satışa əlavə etdiyiniz 16 rəqəmli kart nömrənizi daxil edin:");
+  if (cardInput === prod.card) {
     products = products.filter(p => p.id !== productId);
     saveProducts();
     renderProducts();
-    showToast("Material uğurla silindi.", true);
+    showToast("Material silindi.", true);
+  } else if (cardInput !== null) {
+    alert("XƏTA: Kart nömrəsi yanlışdır! Yalnız satıcı bu materialı silə bilər.");
   }
 }
 
-// PDF YÜKLƏMƏK VƏ LOCALSTORAGE-DƏ SAXLAMAQ
 function handlePDFUpload(event) {
   event.preventDefault();
 
   const title = document.getElementById("pdf-title").value;
   const author = document.getElementById("pdf-author").value;
-  const card = document.getElementById("seller-card").value;
+  const card = document.getElementById("seller-card").value.trim();
   const price = parseFloat(document.getElementById("pdf-price").value);
   const fileInput = document.getElementById("pdf-file");
   const file = fileInput.files[0];
@@ -125,15 +122,16 @@ function handlePDFUpload(event) {
   reader.readAsDataURL(file);
 }
 
-// BAZANI SAXLAMAQ
 function saveProducts() {
   localStorage.setItem("market_products", JSON.stringify(products));
 }
 
-// ÇAT PƏNCƏRƏSİNİ AÇMAQ
 function openChat(productId) {
   activeProduct = products.find(p => p.id === productId);
   if(!activeProduct) return;
+
+  isSellerAuthenticated = false; // Hər açılışda sıfırla (standart alıcı rejimi)
+  document.getElementById("seller-action-panel").classList.add("hidden");
 
   document.getElementById("chat-product-title").innerText = activeProduct.title;
   document.getElementById("chat-seller-name").innerText = `Satıcı: ${activeProduct.author}`;
@@ -150,14 +148,32 @@ function openChat(productId) {
   toggleModal('chat-modal');
 }
 
-// KART NÖMRƏSİNİ KOPYALAMAQ
+// SATICI GİRİŞİ PANELİ (ŞİFRƏ İLƏ TƏSDİQ)
+function toggleSellerLogin() {
+  if(!activeProduct) return;
+
+  if (isSellerAuthenticated) {
+    showToast("Artıq Satıcı Rejimindəsiniz.");
+    return;
+  }
+
+  const enteredCard = prompt("Qəbzləri təsdiqləmək üçün bu məhsula təyin etdiyiniz 16 rəqəmli kart nömrənizi daxil edin:");
+
+  if (enteredCard === activeProduct.card) {
+    isSellerAuthenticated = true;
+    document.getElementById("seller-action-panel").classList.remove("hidden");
+    showToast("Satıcı girişi uğurlu! Təsdiq paneli açıldı.");
+  } else if (enteredCard !== null) {
+    alert("XƏTA: Daxil etdiyiniz kart nömrəsi bu məhsulun satıcısına aid daxil edilən kartla üst-üstə düşmür!");
+  }
+}
+
 function copyCard() {
   if(!activeProduct) return;
   navigator.clipboard.writeText(activeProduct.card);
   showToast("Kart nömrəsi kopyalandı!");
 }
 
-// QƏBZ GÖNDƏRMƏK (ALICI)
 function sendReceiptMessage(event) {
   const file = event.target.files[0];
   if(!file) return;
@@ -186,9 +202,11 @@ function sendReceiptMessage(event) {
   reader.readAsDataURL(file);
 }
 
-// SATICI TƏSDİQLƏYİR ("QƏBZ KEÇƏRLİDİR")
 function sellerApprove() {
-  if(!activeProduct) return;
+  if(!isSellerAuthenticated) {
+    alert("Siz satıcı rejiminə daxil olmamısınız!");
+    return;
+  }
 
   const messagesDiv = document.getElementById("chat-messages");
   const msgHTML = `
@@ -210,12 +228,16 @@ function sellerApprove() {
   showToast("Təşəkkürlər! Məhsul alıcı üçün əlçatan oldu.");
 }
 
-// SATICI İMTİNA EDİR ("QƏBZ KEÇƏRSİZDİR")
 function sellerRejectPrompt() {
-  const reason = prompt("Lütfən imtina səbəbini yazın (Məs: Pul hesabıma gəlməyib, qəbz saxtadır):");
+  if(!isSellerAuthenticated) {
+    alert("Siz satıcı rejiminə daxil olmamısınız!");
+    return;
+  }
+
+  const reason = prompt("Lütfən imtina səbəbini yazın:");
 
   if (!reason || reason.trim() === "") {
-    alert("XƏBƏRDARLIQ: Səbəb yazmadan imtina edə bilməzsiniz!");
+    alert("Səbəb yazmadan imtina edə bilməzsiniz!");
     return;
   }
 
@@ -227,67 +249,55 @@ function sellerRejectPrompt() {
         <span>Satıcı ödənişi rədd etdi!</span>
       </div>
       <p class="text-xs text-slate-300"><span class="font-bold text-rose-300">Səbəb:</span> ${reason}</p>
-      <div class="text-[11px] text-slate-400 border-t border-rose-900/50 pt-2 mt-2">
-        📢 <span class="font-bold text-amber-400">Adminə Bildiriş Göndərildi:</span> Mübahisəli vəziyyət yaranarsa Admin qəbzdəki RRN kodunu yoxlayıb yekun qərar verəcəkdir.
-      </div>
     </div>
   `;
 
   messagesDiv.innerHTML += msgHTML;
   messagesDiv.scrollTop = messagesDiv.scrollHeight;
 
-  showToast("İmtina səbəbi qeydə alındı və Adminə göndərildi.", true);
+  showToast("İmtina səbəbi qeydə alındı.", true);
 }
 
-// 100% ZƏMANƏTLİ VƏ İŞLƏK PDF ENDİRMƏ FUNKSİYASI (BLOB ÜSULU)
 function downloadPDF(base64Data, title) {
   if (!base64Data) {
-    alert("Bu nümunə məhsuldur. Yalnız özünüzün və ya satıcının YENİ YÜKLƏDİYİ PDF-ləri endirmək mümkündür.");
+    alert("Bu nümunə məhsuldur. Yalnız YENİ YÜKLƏDİYİNİZ PDF-ləri endirmək mümkündür.");
     return;
   }
 
   try {
-    // Base64 məlumatını sırf PDF baytlarına çeviririk
     const parts = base64Data.split(';base64,');
     const contentType = parts[0].split(':')[1] || 'application/pdf';
     const raw = window.atob(parts[1]);
-    const rawLength = raw.length;
-    const uInt8Array = new Uint8Array(rawLength);
+    const uInt8Array = new Uint8Array(raw.length);
 
-    for (let i = 0; i < rawLength; ++i) {
+    for (let i = 0; i < raw.length; ++i) {
       uInt8Array[i] = raw.charCodeAt(i);
     }
 
-    // Təmiz PDF Blobu yaradırıq
     const blob = new Blob([uInt8Array], { type: contentType });
     const blobUrl = URL.createObjectURL(blob);
 
-    // Endirmə linki yaradıb avtomatik klikləyirik
     const link = document.createElement("a");
     link.href = blobUrl;
-    link.download = `${title.replace(/[^a-zA-Z0-9-ƏəĞğIıİiÖöŞşÜü]/g, "_")}.pdf`;
+    link.download = `${title}.pdf`;
     document.body.appendChild(link);
     link.click();
 
-    // Təmizlik
     setTimeout(() => {
       document.body.removeChild(link);
       URL.revokeObjectURL(blobUrl);
     }, 100);
 
   } catch (error) {
-    console.error("PDF Endirmə xətası:", error);
-    alert("Fayl endirilərkən xəta baş verdi. Lütfən yenidən cəhd edin.");
+    alert("Fayl endirilərkən xəta baş verdi.");
   }
 }
 
-// KART NÖMRƏSİNİ FORMATLAMAQ
 function formatCardNumber(cardStr) {
   if(!cardStr) return "";
   return cardStr.replace(/(.{4})/g, '$1 ').trim();
 }
 
-// TOAST BİLDİRİŞİ
 function showToast(message, isError = false) {
   const toast = document.getElementById("toast");
   const toastMessage = document.getElementById("toast-message");
@@ -306,5 +316,4 @@ function showToast(message, isError = false) {
   setTimeout(() => {
     toast.classList.add("hidden");
   }, 4000);
-      }
-      
+}
