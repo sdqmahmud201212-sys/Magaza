@@ -203,7 +203,6 @@ function openChat(id, title, author, price, card, phone) {
   document.getElementById('chat-price').innerText = `${price} AZN`;
   document.getElementById('chat-card-number').innerText = card;
   
-  // Gmail bildiriş simulyasiyası (Alış zamanı satıcıya bildiriş simulyasiya olunur)
   showToast('Satıcının Gmail ünvanına alış sorğusu göndərildi!');
   toggleModal('chat-modal');
 }
