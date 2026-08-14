@@ -1,26 +1,29 @@
-let defaultProducts = [
-  {
-    id: 1,
-    title: "JavaScript Tam Praktik Dərslik (Nümunə)",
-    author: "Məmməd Əliyev",
-    card: "4169738812345678",
-    price: 4,
-    fileData: null,
-    image: "https://images.unsplash.com/photo-1532012197267-da84d127e765?auto=format&fit=crop&w=500&q=80"
-  }
-];
-
-let products = JSON.parse(localStorage.getItem("market_products")) || defaultProducts;
+let products = [];
 let activeProduct = null;
-let isSellerAuthenticated = false; // Satıcı girişi idarəsi
+let isSellerAuthenticated = false;
 
 document.addEventListener("DOMContentLoaded", () => {
-  renderProducts();
+  listenToProducts();
+  listenToAdminChat();
 });
 
 function toggleModal(modalId) {
   const modal = document.getElementById(modalId);
   if(modal) modal.classList.toggle("hidden");
+}
+
+// BAZADAN MƏHSULLARI CANLI DİNLƏMƏK
+function listenToProducts() {
+  database.ref('products').on('value', (snapshot) => {
+    const data = snapshot.val();
+    products = [];
+    if (data) {
+      Object.keys(data).forEach(key => {
+        products.push({ id: key, ...data[key] });
+      });
+    }
+    renderProducts();
+  });
 }
 
 function renderProducts() {
@@ -32,7 +35,7 @@ function renderProducts() {
   if(countElem) countElem.innerText = `${products.length} material`;
 
   if(products.length === 0) {
-    grid.innerHTML = `<div class="col-span-full text-center py-12 text-slate-500">Hələ ki satışda heç bir material yoxdur.</div>`;
+    grid.innerHTML = `<div class="col-span-full text-center py-12 text-slate-500">Satışda material yoxdur. İlk PDF-i siz yükləyin!</div>`;
     return;
   }
 
@@ -41,7 +44,7 @@ function renderProducts() {
     card.className = "glass rounded-3xl overflow-hidden shadow-xl border border-slate-800 flex flex-col justify-between hover:border-purple-500/50 transition duration-300 group relative";
 
     card.innerHTML = `
-      <button onclick="deleteProductWithAuth(${product.id})" class="absolute top-3 left-3 bg-rose-600/80 hover:bg-rose-600 text-white w-8 h-8 rounded-full flex items-center justify-center transition z-10 shadow-lg" title="Materialı Sil">
+      <button onclick="deleteProductWithAuth('${product.id}', '${product.card}')" class="absolute top-3 left-3 bg-rose-600/80 hover:bg-rose-600 text-white w-8 h-8 rounded-full flex items-center justify-center transition z-10 shadow-lg" title="Materialı Sil">
         <i class="fa-solid fa-trash-can text-xs"></i>
       </button>
 
@@ -58,7 +61,7 @@ function renderProducts() {
           <h3 class="text-base font-bold text-white mb-4 line-clamp-2">${product.title}</h3>
         </div>
 
-        <button onclick="openChat(${product.id})" class="w-full bg-slate-900 hover:bg-purple-600 text-slate-200 hover:text-white py-3 rounded-2xl text-xs font-bold transition duration-300 flex items-center justify-center space-x-2 border border-slate-700/60 hover:border-purple-500 shadow-md">
+        <button onclick="openChat('${product.id}')" class="w-full bg-slate-900 hover:bg-purple-600 text-slate-200 hover:text-white py-3 rounded-2xl text-xs font-bold transition duration-300 flex items-center justify-center space-x-2 border border-slate-700/60 hover:border-purple-500 shadow-md">
           <i class="fa-solid fa-cart-shopping"></i>
           <span>Almaq Üçün Çata Keç</span>
         </button>
@@ -68,22 +71,19 @@ function renderProducts() {
   });
 }
 
-// SİLMƏK ÜÇÜN KART NÖMRƏSİ TƏLƏB ET
-function deleteProductWithAuth(productId) {
-  const prod = products.find(p => p.id === productId);
-  if(!prod) return;
-
-  const cardInput = prompt("Materialı silmək üçün satışa əlavə etdiyiniz 16 rəqəmli kart nömrənizi daxil edin:");
-  if (cardInput === prod.card) {
-    products = products.filter(p => p.id !== productId);
-    saveProducts();
-    renderProducts();
-    showToast("Material silindi.", true);
+// BAZADAN CANLI SİLMƏK (HAMIDA EYNİ ANDA İTMƏSİ ÜÇÜN)
+function deleteProductWithAuth(productId, correctCard) {
+  const cardInput = prompt("Materialı silmək üçün 16 rəqəmli kart nömrənizi daxil edin:");
+  if (cardInput === correctCard) {
+    database.ref('products/' + productId).remove()
+      .then(() => showToast("Material bütün istifadəçilərdən silindi.", true))
+      .catch((err) => alert("Xəta baş verdi: " + err.message));
   } else if (cardInput !== null) {
-    alert("XƏTA: Kart nömrəsi yanlışdır! Yalnız satıcı bu materialı silə bilər.");
+    alert("XƏTA: Kart nömrəsi yanlışdır!");
   }
 }
 
+// BAZAYA YENİ PDF ƏLAVƏ ETMƏK
 function handlePDFUpload(event) {
   event.preventDefault();
 
@@ -100,37 +100,29 @@ function handlePDFUpload(event) {
   reader.onload = function (e) {
     const fileBase64 = e.target.result;
 
-    const newProduct = {
-      id: Date.now(),
+    const newProductRef = database.ref('products').push();
+    newProductRef.set({
       title: title,
       author: author,
       card: card,
       price: price,
       fileData: fileBase64,
       image: "https://images.unsplash.com/photo-1512820790803-83ca734da794?auto=format&fit=crop&w=500&q=80"
-    };
-
-    products.unshift(newProduct);
-    saveProducts();
-    renderProducts();
-    toggleModal('upload-modal');
-    document.getElementById("upload-form").reset();
-
-    showToast("Təbriklər! Material satışa çıxarıldı.");
+    }).then(() => {
+      toggleModal('upload-modal');
+      document.getElementById("upload-form").reset();
+      showToast("Təbriklər! Material canlı satışa çıxarıldı.");
+    });
   };
 
   reader.readAsDataURL(file);
-}
-
-function saveProducts() {
-  localStorage.setItem("market_products", JSON.stringify(products));
 }
 
 function openChat(productId) {
   activeProduct = products.find(p => p.id === productId);
   if(!activeProduct) return;
 
-  isSellerAuthenticated = false; // Hər açılışda sıfırla (standart alıcı rejimi)
+  isSellerAuthenticated = false;
   document.getElementById("seller-action-panel").classList.add("hidden");
 
   document.getElementById("chat-product-title").innerText = activeProduct.title;
@@ -141,14 +133,13 @@ function openChat(productId) {
   const messagesDiv = document.getElementById("chat-messages");
   messagesDiv.innerHTML = `
     <div class="bg-slate-900/90 border border-slate-800 p-3 rounded-2xl text-xs text-slate-300">
-      👋 <span class="font-bold text-purple-400">Sistem:</span> Xoş gəldiniz! Lütfən ${activeProduct.price} AZN məbləği yuxarıdakı karta köçürün və qəbzin şəklini çata göndərin.
+      👋 <span class="font-bold text-purple-400">Sistem:</span> Xoş gəldiniz! Lütfən ${activeProduct.price} AZN məbləği yuxarıdakı karta köçürün və qəbzin şəklini çata göndərin. Dələduzluq halında şərait yaradılmır və polisə ötürülür.
     </div>
   `;
 
   toggleModal('chat-modal');
 }
 
-// SATICI GİRİŞİ PANELİ (ŞİFRƏ İLƏ TƏSDİQ)
 function toggleSellerLogin() {
   if(!activeProduct) return;
 
@@ -157,14 +148,14 @@ function toggleSellerLogin() {
     return;
   }
 
-  const enteredCard = prompt("Qəbzləri təsdiqləmək üçün bu məhsula təyin etdiyiniz 16 rəqəmli kart nömrənizi daxil edin:");
+  const enteredCard = prompt("Qəbzləri təsdiqləmək üçün 16 rəqəmli kart nömrənizi daxil edin:");
 
   if (enteredCard === activeProduct.card) {
     isSellerAuthenticated = true;
     document.getElementById("seller-action-panel").classList.remove("hidden");
     showToast("Satıcı girişi uğurlu! Təsdiq paneli açıldı.");
   } else if (enteredCard !== null) {
-    alert("XƏTA: Daxil etdiyiniz kart nömrəsi bu məhsulun satıcısına aid daxil edilən kartla üst-üstə düşmür!");
+    alert("XƏTA: Kart nömrəsi yanlışdır!");
   }
 }
 
@@ -187,7 +178,7 @@ function sendReceiptMessage(event) {
       <div class="flex flex-col items-end space-y-1">
         <span class="text-[10px] text-slate-400">Siz (Alıcı)</span>
         <div class="bg-purple-600 p-2 rounded-2xl max-w-[80%] border border-purple-400/30">
-          <p class="text-xs text-white mb-2 font-medium">Ödəniş qəbzini göndərdim, zəhmət olmasa yoxlayın:</p>
+          <p class="text-xs text-white mb-2 font-medium">Ödəniş qəbzini göndərdim:</p>
           <img src="${imageUrl}" class="rounded-xl w-full max-h-48 object-cover cursor-pointer border border-white/20" onclick="window.open('${imageUrl}')">
         </div>
       </div>
@@ -196,17 +187,14 @@ function sendReceiptMessage(event) {
     messagesDiv.innerHTML += msgHTML;
     messagesDiv.scrollTop = messagesDiv.scrollHeight;
 
-    showToast("Qəbz satıcıya göndərildi. Təsdiq gözlənilir.");
+    showToast("Qəbz satıcıya göndərildi.");
   };
 
   reader.readAsDataURL(file);
 }
 
 function sellerApprove() {
-  if(!isSellerAuthenticated) {
-    alert("Siz satıcı rejiminə daxil olmamısınız!");
-    return;
-  }
+  if(!isSellerAuthenticated) return;
 
   const messagesDiv = document.getElementById("chat-messages");
   const msgHTML = `
@@ -229,17 +217,10 @@ function sellerApprove() {
 }
 
 function sellerRejectPrompt() {
-  if(!isSellerAuthenticated) {
-    alert("Siz satıcı rejiminə daxil olmamısınız!");
-    return;
-  }
+  if(!isSellerAuthenticated) return;
 
   const reason = prompt("Lütfən imtina səbəbini yazın:");
-
-  if (!reason || reason.trim() === "") {
-    alert("Səbəb yazmadan imtina edə bilməzsiniz!");
-    return;
-  }
+  if (!reason) return;
 
   const messagesDiv = document.getElementById("chat-messages");
   const msgHTML = `
@@ -258,11 +239,55 @@ function sellerRejectPrompt() {
   showToast("İmtina səbəbi qeydə alındı.", true);
 }
 
+// ADMIN ÇATI FUNKSİYALARI (REAL-TIME FIREBASE)
+function sendAdminMessage(e) {
+  e.preventDefault();
+  const input = document.getElementById("admin-msg-input");
+  const msg = input.value.trim();
+  if(!msg) return;
+
+  database.ref('admin_chats').push({
+    text: msg,
+    sender: 'User',
+    timestamp: Date.now()
+  });
+
+  input.value = "";
+}
+
+function listenToAdminChat() {
+  database.ref('admin_chats').on('value', (snapshot) => {
+    const data = snapshot.val();
+    const chatContainer = document.getElementById("admin-chat-messages");
+    if(!chatContainer) return;
+
+    chatContainer.innerHTML = `
+      <div class="bg-blue-900/40 border border-blue-500/30 p-3 rounded-2xl text-xs text-blue-100">
+        👋 <strong>Admin Dəstək:</strong> Salam! Hər hansı dələduzluq halı ilə qarşılaşmısınızsa və ya sualınız varsa, buradan bizə yazın. Şikayətlərə dərhal baxılır!
+      </div>
+    `;
+
+    if(data) {
+      Object.keys(data).forEach(key => {
+        const item = data[key];
+        const isUser = item.sender === 'User';
+        const msgHTML = `
+          <div class="flex flex-col ${isUser ? 'items-end' : 'items-start'} space-y-1">
+            <span class="text-[9px] text-slate-400">${isUser ? 'Siz' : 'Admin'}</span>
+            <div class="${isUser ? 'bg-blue-600 text-white' : 'bg-slate-800 text-slate-200'} p-2.5 rounded-2xl text-xs max-w-[85%] border border-white/10">
+              ${item.text}
+            </div>
+          </div>
+        `;
+        chatContainer.innerHTML += msgHTML;
+      });
+      chatContainer.scrollTop = chatContainer.scrollHeight;
+    }
+  });
+}
+
 function downloadPDF(base64Data, title) {
-  if (!base64Data) {
-    alert("Bu nümunə məhsuldur. Yalnız YENİ YÜKLƏDİYİNİZ PDF-ləri endirmək mümkündür.");
-    return;
-  }
+  if (!base64Data) return;
 
   try {
     const parts = base64Data.split(';base64,');
@@ -316,4 +341,4 @@ function showToast(message, isError = false) {
   setTimeout(() => {
     toast.classList.add("hidden");
   }, 4000);
-}
+            }
