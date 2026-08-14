@@ -44,7 +44,7 @@ function renderProducts() {
     card.className = "glass rounded-3xl overflow-hidden shadow-xl border border-slate-800 flex flex-col justify-between hover:border-purple-500/50 transition duration-300 group relative";
 
     card.innerHTML = `
-      <button onclick="deleteProductWithAuth('${product.id}', '${product.card}')" class="absolute top-3 left-3 bg-rose-600/80 hover:bg-rose-600 text-white w-8 h-8 rounded-full flex items-center justify-center transition z-10 shadow-lg" title="Materialı Sil">
+      <button onclick="deleteProductWithAuth('${product.id}', '${product.pinCode}')" class="absolute top-3 left-3 bg-rose-600/80 hover:bg-rose-600 text-white w-8 h-8 rounded-full flex items-center justify-center transition z-10 shadow-lg" title="Materialı Sil">
         <i class="fa-solid fa-trash-can text-xs"></i>
       </button>
 
@@ -71,19 +71,19 @@ function renderProducts() {
   });
 }
 
-// BAZADAN CANLI SİLMƏK (HAMIDA EYNİ ANDA İTMƏSİ ÜÇÜN)
-function deleteProductWithAuth(productId, correctCard) {
-  const cardInput = prompt("Materialı silmək üçün 16 rəqəmli kart nömrənizi daxil edin:");
-  if (cardInput === correctCard) {
+// BAZADAN CANLI SİLMƏK (5 RƏQƏMLİ PIN KOD İLƏ)
+function deleteProductWithAuth(productId, correctPin) {
+  const pinInput = prompt("Materialı silmək üçün 5 rəqəmli məxfi PIN kodunuzu daxil edin:");
+  if (pinInput === correctPin) {
     database.ref('products/' + productId).remove()
       .then(() => showToast("Material bütün istifadəçilərdən silindi.", true))
       .catch((err) => alert("Xəta baş verdi: " + err.message));
-  } else if (cardInput !== null) {
-    alert("XƏTA: Kart nömrəsi yanlışdır!");
+  } else if (pinInput !== null) {
+    alert("XƏTA: Məxfi PIN kod yanlışdır!");
   }
 }
 
-// BAZAYA YENİ PDF ƏLAVƏ ETMƏK
+// MƏHSUL ƏLAVƏ ETMƏK VƏ KOD GÖSTƏRMƏK
 function handlePDFUpload(event) {
   event.preventDefault();
 
@@ -96,6 +96,9 @@ function handlePDFUpload(event) {
 
   if (!file) return;
 
+  // 5 RƏQƏMLİ RANDOM PIN KOD
+  const generatedPin = Math.floor(10000 + Math.random() * 90000).toString();
+
   const reader = new FileReader();
   reader.onload = function (e) {
     const fileBase64 = e.target.result;
@@ -106,16 +109,67 @@ function handlePDFUpload(event) {
       author: author,
       card: card,
       price: price,
+      pinCode: generatedPin,
       fileData: fileBase64,
       image: "https://images.unsplash.com/photo-1512820790803-83ca734da794?auto=format&fit=crop&w=500&q=80"
     }).then(() => {
       toggleModal('upload-modal');
       document.getElementById("upload-form").reset();
-      showToast("Təbriklər! Material canlı satışa çıxarıldı.");
+      
+      // XÜSUSİ KOD VƏ XƏBƏRDARLIQ PƏNCƏRƏSİNİ AÇMAQ
+      showPinModal(generatedPin);
+      showToast("Material satışa çıxarıldı!");
     });
   };
 
   reader.readAsDataURL(file);
+}
+
+// SATICI ÜÇÜN 5 RƏQƏMLİ KODU VƏ İTİRMƏ XƏBƏRDARLIĞINI GÖSTƏRƏN FUNKSİYA
+function showPinModal(pin) {
+  let pinModal = document.getElementById("pin-modal");
+  
+  if(!pinModal) {
+    pinModal = document.createElement("div");
+    pinModal.id = "pin-modal";
+    pinModal.className = "fixed inset-0 bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-4 z-50";
+    document.body.appendChild(pinModal);
+  }
+
+  pinModal.innerHTML = `
+    <div class="bg-slate-900 border border-purple-500/40 w-full max-w-md rounded-3xl p-6 text-center shadow-2xl relative">
+      <div class="w-16 h-16 bg-purple-600/20 text-purple-400 rounded-full flex items-center justify-center mx-auto mb-4 border border-purple-500/30 text-2xl">
+        <i class="fa-solid fa-key"></i>
+      </div>
+      
+      <h3 class="text-xl font-bold text-white mb-2">Satıcı Təhlükəsizlik Kodunuz</h3>
+      <p class="text-xs text-slate-400 mb-4">Bu kod satıcı panelinə girmək və ya məhsulu silmək üçün lazımdır.</p>
+
+      <div class="bg-slate-950 border border-slate-800 rounded-2xl p-4 mb-4 flex items-center justify-between">
+        <span id="pin-display-code" class="text-3xl font-black tracking-widest text-emerald-400 font-mono">${pin}</span>
+        <button onclick="copyPinCode('${pin}')" class="bg-purple-600 hover:bg-purple-500 text-white text-xs px-3 py-2 rounded-xl transition flex items-center space-x-1 font-semibold">
+          <i class="fa-solid fa-copy"></i>
+          <span>Kopyala</span>
+        </button>
+      </div>
+
+      <div class="bg-rose-950/50 border border-rose-500/30 rounded-2xl p-3 mb-6 text-left flex items-start space-x-2 text-rose-300 text-xs">
+        <i class="fa-solid fa-triangle-exclamation text-rose-400 mt-0.5 text-sm"></i>
+        <span><strong>XƏBƏRDARLIQ:</strong> Bu kodu bir yerə qeyd edin və ya kopyalayın! Kodu itirsəniz, satıcı panelinə keçid edə bilməyəcəksiniz.</span>
+      </div>
+
+      <button onclick="document.getElementById('pin-modal').classList.add('hidden')" class="w-full bg-slate-800 hover:bg-slate-700 text-white font-bold py-3 rounded-2xl text-xs transition">
+        Anladım, Kodu Qeyd Etdim
+      </button>
+    </div>
+  `;
+
+  pinModal.classList.remove("hidden");
+}
+
+function copyPinCode(pin) {
+  navigator.clipboard.writeText(pin);
+  showToast("PIN kod buferə kopyalandı!");
 }
 
 function openChat(productId) {
@@ -131,15 +185,26 @@ function openChat(productId) {
   document.getElementById("chat-card-number").innerText = formatCardNumber(activeProduct.card);
 
   const messagesDiv = document.getElementById("chat-messages");
+  
+  // HƏQİQİ AR CİNAYƏT MƏCƏLLƏSİ VƏ İNZİBATİ XƏTALAR MƏCƏLLƏSİ XƏBƏRDARLIĞI
   messagesDiv.innerHTML = `
-    <div class="bg-slate-900/90 border border-slate-800 p-3 rounded-2xl text-xs text-slate-300">
-      👋 <span class="font-bold text-purple-400">Sistem:</span> Xoş gəldiniz! Lütfən ${activeProduct.price} AZN məbləği yuxarıdakı karta köçürün və qəbzin şəklini çata göndərin. Dələduzluq halında şərait yaradılmır və polisə ötürülür.
+    <div class="bg-slate-900/90 border border-slate-800 p-3.5 rounded-2xl text-xs text-slate-300 space-y-2">
+      <p>👋 <span class="font-bold text-purple-400">Sistem:</span> Xoş gəldiniz! Lütfən <strong>${activeProduct.price} AZN</strong> məbləği yuxarıdakı karta köçürün və qəbzin şəklini çata göndərin.</p>
+      
+      <div class="bg-rose-950/40 border border-rose-500/30 p-2.5 rounded-xl text-[11px] text-rose-200 flex items-start space-x-2">
+        <i class="fa-solid fa-scale-balanced text-rose-400 text-sm mt-0.5"></i>
+        <div>
+          <strong class="text-rose-300">XƏBƏRDARLIQ (AR Cinayət Məcəlləsi):</strong><br>
+          Saxta qəbz göndərmək və ya ödəniş alıb malı təqdim etməmək <strong>AR Cinayət Məcəlləsinin 178-ci maddəsi (Dələduzluq)</strong> və <strong>AR İnzibati Xətalar Məcəlləsinin 227-ci maddəsi (Xırda talama)</strong> ilə hüquqi məsuliyyət yaradır. Bütün yazışmalar və IP ünvanlar qeydə alınır.
+        </div>
+      </div>
     </div>
   `;
 
   toggleModal('chat-modal');
 }
 
+// SATICI PANELİNƏ 5 RƏQƏMLİ PIN İLƏ GİRİŞ
 function toggleSellerLogin() {
   if(!activeProduct) return;
 
@@ -148,14 +213,14 @@ function toggleSellerLogin() {
     return;
   }
 
-  const enteredCard = prompt("Qəbzləri təsdiqləmək üçün 16 rəqəmli kart nömrənizi daxil edin:");
+  const enteredPin = prompt("Satıcı panelinə keçmək üçün 5 rəqəmli məxfi PIN kodunuzu daxil edin:");
 
-  if (enteredCard === activeProduct.card) {
+  if (enteredPin === activeProduct.pinCode) {
     isSellerAuthenticated = true;
     document.getElementById("seller-action-panel").classList.remove("hidden");
     showToast("Satıcı girişi uğurlu! Təsdiq paneli açıldı.");
-  } else if (enteredCard !== null) {
-    alert("XƏTA: Kart nömrəsi yanlışdır!");
+  } else if (enteredPin !== null) {
+    alert("XƏTA: 5 rəqəmli məxfi PIN kod yanlışdır!");
   }
 }
 
@@ -341,4 +406,5 @@ function showToast(message, isError = false) {
   setTimeout(() => {
     toast.classList.add("hidden");
   }, 4000);
-            }
+      }
+    
