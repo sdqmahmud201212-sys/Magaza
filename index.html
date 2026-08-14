@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="az">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DigitalMarket - Sikkə ilə PDF Satışı</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- FontAwesome İkonlar -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    .glass {
+      background: rgba(30, 41, 59, 0.7);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+  </style>
+</head>
+<body class="bg-slate-950 text-slate-100 font-sans min-h-screen flex flex-col">
+
+  <!-- NAVBAR -->
+  <nav class="glass sticky top-0 z-50 px-6 py-4 flex justify-between items-center border-b border-slate-800">
+    <div class="flex items-center space-x-3">
+      <i class="fa-solid fa-book-open text-indigo-500 text-2xl"></i>
+      <span class="text-xl font-bold bg-gradient-to-r from-indigo-400 to-pink-500 bg-clip-text text-transparent">DigitalMarket</span>
+    </div>
+
+    <!-- Balans və Əməliyyat Panel -->
+    <div class="flex items-center space-x-6">
+      <div class="bg-slate-900 border border-slate-700 px-4 py-2 rounded-full flex items-center space-x-2">
+        <i class="fa-solid fa-coins text-amber-400 text-lg"></i>
+        <span class="font-semibold text-slate-200" id="user-coins">0</span>
+        <span class="text-xs text-slate-400">Sikkə</span>
+      </div>
+      <button onclick="addCoins()" class="bg-indigo-600 hover:bg-indigo-500 text-white px-4 py-2 rounded-full text-sm font-medium transition flex items-center space-x-2 shadow-lg shadow-indigo-600/30">
+        <i class="fa-solid fa-plus"></i>
+        <span>Sikkə Artır</span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- HERO SECTION -->
+  <header class="py-12 text-center px-4 max-w-3xl mx-auto">
+    <h1 class="text-4xl md:text-5xl font-extrabold mb-4 bg-gradient-to-r from-white via-slate-200 to-indigo-300 bg-clip-text text-transparent">
+      Rəqəmsal Kitablar və Materiallar
+    </h1>
+    <p class="text-slate-400 text-lg">
+      Sikkələrinizlə istədiyiniz PDF məhsulu anında alın, avtomatik şəxsi kabinetinizə yüklənsin. 
+      <br><span class="text-indigo-400 font-medium">(Məzənnə: 5 Sikkə = 1 AZN)</span>
+    </p>
+  </header>
+
+  <!-- MƏHSULLAR SƏHİFƏSİ (VİTRİN) -->
+  <main class="max-w-6xl mx-auto px-6 py-8 flex-1 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8" id="products-grid">
+    <!-- Məhsullar JS tərəfindən dinamik yüklənəcək -->
+  </main>
+
+  <!-- BİLDİRİŞ (TOAST NOTIFICATION) -->
+  <div id="toast" class="fixed bottom-5 right-5 hidden bg-emerald-600 text-white px-6 py-3 rounded-lg shadow-xl flex items-center space-x-3 transition-all transform translate-y-2">
+    <i class="fa-solid fa-circle-check text-xl"></i>
+    <span id="toast-message">Məhsul uğurla alındı!</span>
+  </div>
+
+  <!-- FOOTER -->
+  <footer class="border-t border-slate-800 py-6 text-center text-slate-500 text-sm">
+    &copy; 2026 DigitalMarket. Bütün hüquqlar qorunur. (5% Avtomatik Platforma Komissiyası)
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+  </html>
+  
