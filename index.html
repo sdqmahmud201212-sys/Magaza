@@ -16,7 +16,7 @@
       font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
     }
     .glass {
-      background: rgba(15, 23, 42, 0.75);
+      background: rgba(15, 23, 42, 0.85);
       backdrop-filter: blur(16px);
       -webkit-backdrop-filter: blur(16px);
     }
@@ -25,37 +25,37 @@
 <body class="min-h-screen flex flex-col justify-between selection:bg-purple-500 selection:text-white">
 
   <!-- TOP HEADER / NAVİQASİYA -->
-  <header class="sticky top-0 z-40 glass border-b border-slate-800">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+  <header class="sticky top-0 z-50 glass border-b border-slate-800">
+    <div class="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
       
       <!-- Logo -->
-      <div class="flex items-center space-x-3">
-        <div class="w-10 h-10 bg-purple-600 rounded-2xl flex items-center justify-center shadow-lg shadow-purple-600/30 text-white font-bold text-xl">
+      <div class="flex items-center space-x-2.5">
+        <div class="w-10 h-10 bg-purple-600 rounded-2xl flex items-center justify-center shadow-lg shadow-purple-600/30 text-white font-bold text-xl shrink-0">
           <i class="fa-solid fa-file-pdf"></i>
         </div>
         <div>
-          <h1 class="text-lg font-black tracking-tight text-white">PDF Market</h1>
-          <p class="text-[10px] text-purple-400 font-semibold tracking-widest uppercase">Təhlükəsiz Satış Platforması</p>
+          <h1 class="text-base sm:text-lg font-black tracking-tight text-white leading-tight">PDF Market</h1>
+          <p class="text-[9px] sm:text-[10px] text-purple-400 font-semibold tracking-widest uppercase">Təhlükəsiz Satış</p>
         </div>
       </div>
 
       <!-- Düymələr -->
-      <div class="flex items-center space-x-2 sm:space-x-3">
+      <div class="flex items-center space-x-1.5 sm:space-x-2">
         <!-- Ətraflı Qaydalar Düyməsi -->
-        <button onclick="toggleModal('rules-modal')" class="bg-slate-900 hover:bg-slate-800 text-slate-300 hover:text-white px-3 sm:px-4 py-2.5 rounded-2xl text-xs font-bold border border-slate-700/60 transition flex items-center space-x-2">
-          <i class="fa-solid fa-book-bookmark text-amber-400"></i>
-          <span class="hidden sm:inline">Ətraflı Qaydalar</span>
+        <button type="button" onclick="toggleModal('rules-modal')" class="bg-slate-900 hover:bg-slate-800 text-slate-300 hover:text-white px-3 py-2.5 rounded-xl sm:rounded-2xl text-xs font-bold border border-slate-700/60 transition flex items-center space-x-1.5 cursor-pointer">
+          <i class="fa-solid fa-book-bookmark text-amber-400 text-sm"></i>
+          <span class="hidden md:inline">Qaydalar</span>
         </button>
 
         <!-- Adminlə Çat Düyməsi -->
-        <button onclick="toggleModal('admin-modal')" class="bg-slate-900 hover:bg-slate-800 text-slate-300 hover:text-white px-3 sm:px-4 py-2.5 rounded-2xl text-xs font-bold border border-slate-700/60 transition flex items-center space-x-2">
-          <i class="fa-solid fa-headset text-purple-400"></i>
-          <span class="hidden sm:inline">Adminlə Çat</span>
+        <button type="button" onclick="toggleModal('admin-modal')" class="bg-slate-900 hover:bg-slate-800 text-slate-300 hover:text-white px-3 py-2.5 rounded-xl sm:rounded-2xl text-xs font-bold border border-slate-700/60 transition flex items-center space-x-1.5 cursor-pointer">
+          <i class="fa-solid fa-headset text-purple-400 text-sm"></i>
+          <span class="hidden md:inline">Adminlə Çat</span>
         </button>
 
         <!-- Material Yüklə Düyməsi -->
-        <button onclick="toggleModal('upload-modal')" class="bg-purple-600 hover:bg-purple-500 text-white px-4 sm:px-5 py-2.5 rounded-2xl text-xs font-bold transition shadow-lg shadow-purple-600/30 flex items-center space-x-2">
-          <i class="fa-solid fa-plus"></i>
+        <button type="button" onclick="toggleModal('upload-modal')" class="bg-purple-600 hover:bg-purple-500 text-white px-3.5 sm:px-5 py-2.5 rounded-xl sm:rounded-2xl text-xs font-bold transition shadow-lg shadow-purple-600/30 flex items-center space-x-1.5 cursor-pointer">
+          <i class="fa-solid fa-plus text-sm"></i>
           <span>Material Yüklə</span>
         </button>
       </div>
@@ -67,13 +67,13 @@
   <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-6">
 
     <!-- 1. MÜƏLLİF HÜQUQLARI VƏ TƏKRAR PAYLAŞIM QADAĞASI BANNERİ -->
-    <div class="bg-purple-950/40 border border-purple-500/30 backdrop-blur-md rounded-3xl p-4 sm:p-5 flex items-center justify-between shadow-xl">
+    <div class="bg-purple-950/40 border border-purple-500/30 backdrop-blur-md rounded-3xl p-4 sm:p-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 shadow-xl">
       <div class="flex items-center space-x-4">
         <div class="w-12 h-12 bg-purple-600/20 text-purple-400 rounded-2xl flex items-center justify-center border border-purple-500/30 shrink-0 text-xl">
           <i class="fa-solid fa-shield-halved"></i>
         </div>
         <div>
-          <h4 class="text-sm sm:text-base font-bold text-white flex items-center gap-2">
+          <h4 class="text-sm sm:text-base font-bold text-white flex flex-wrap items-center gap-2">
             <span>Müəllif hüquqları qorunur, bir fayl ikinci dəfə paylaşıla bilmir</span>
             <span class="bg-emerald-500/20 text-emerald-400 text-[10px] px-2.5 py-0.5 rounded-full border border-emerald-500/30 font-semibold">Sistem Aktivdir</span>
           </h4>
@@ -82,7 +82,7 @@
           </p>
         </div>
       </div>
-      <button onclick="toggleModal('rules-modal')" class="hidden md:flex bg-purple-600/20 hover:bg-purple-600 text-purple-300 hover:text-white px-4 py-2 rounded-xl text-xs font-semibold border border-purple-500/40 transition whitespace-nowrap">
+      <button type="button" onclick="toggleModal('rules-modal')" class="w-full sm:w-auto bg-purple-600/20 hover:bg-purple-600 text-purple-300 hover:text-white px-4 py-2 rounded-xl text-xs font-semibold border border-purple-500/40 transition text-center cursor-pointer">
         Qaydaları Oxu
       </button>
     </div>
@@ -131,7 +131,7 @@
           <i class="fa-solid fa-book-bookmark text-amber-400"></i>
           <span>Platformadan İstifadə Və Satış Qaydaları</span>
         </h3>
-        <button onclick="toggleModal('rules-modal')" class="text-slate-400 hover:text-white text-lg">
+        <button type="button" onclick="toggleModal('rules-modal')" class="text-slate-400 hover:text-white text-lg cursor-pointer">
           <i class="fa-solid fa-xmark"></i>
         </button>
       </div>
@@ -148,7 +148,7 @@
           <h4 class="font-bold text-emerald-400 flex items-center gap-2">
             <i class="fa-solid fa-percent"></i> 2. 0% Komissiya Və Birbaşa Ödəniş
           </h4>
-          <p>Platformamız komissiyasız fəaliyyət gösterir. Alıcı ödənişi birbaşa satıcının şəxsi bank kartına edir. Satıcı ödəniş qəbzini təsdiqlədikdən sonra PDF avtomatik yüklənir.</p>
+          <p>Platformamız komissiyasız fəaliyyət göstərir. Alıcı ödənişi birbaşa satıcının şəxsi bank kartına edir. Satıcı ödəniş qəbzini təsdiqlədikdən sonra PDF avtomatik yüklənir.</p>
         </div>
 
         <div class="bg-slate-950 border border-slate-800 p-4 rounded-2xl space-y-2">
@@ -159,7 +159,7 @@
         </div>
       </div>
 
-      <button onclick="toggleModal('rules-modal')" class="w-full bg-slate-800 hover:bg-slate-700 text-white font-bold py-3 rounded-2xl text-xs transition">
+      <button type="button" onclick="toggleModal('rules-modal')" class="w-full bg-slate-800 hover:bg-slate-700 text-white font-bold py-3 rounded-2xl text-xs transition cursor-pointer">
         Anladım
       </button>
     </div>
@@ -168,7 +168,7 @@
   <!-- MODAL 2: MƏHSUL YÜKLƏMƏ PƏNCƏRƏSİ -->
   <div id="upload-modal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-4 z-50 hidden">
     <div class="bg-slate-900 border border-slate-800 w-full max-w-lg rounded-3xl p-6 relative shadow-2xl space-y-4">
-      <button onclick="toggleModal('upload-modal')" class="absolute top-4 right-4 text-slate-400 hover:text-white text-lg">
+      <button type="button" onclick="toggleModal('upload-modal')" class="absolute top-4 right-4 text-slate-400 hover:text-white text-lg cursor-pointer">
         <i class="fa-solid fa-xmark"></i>
       </button>
 
@@ -204,7 +204,7 @@
           <input type="file" id="pdf-file" accept="application/pdf" required class="w-full text-xs text-slate-400 file:mr-4 file:py-2.5 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-purple-600 file:text-white hover:file:bg-purple-500 cursor-pointer">
         </div>
 
-        <button type="submit" class="w-full bg-purple-600 hover:bg-purple-500 text-white font-bold py-3 rounded-2xl text-xs transition shadow-lg shadow-purple-600/30">
+        <button type="submit" class="w-full bg-purple-600 hover:bg-purple-500 text-white font-bold py-3 rounded-2xl text-xs transition shadow-lg shadow-purple-600/30 cursor-pointer">
           Satışa Çıxar
         </button>
       </form>
@@ -222,10 +222,10 @@
           <p id="chat-seller-name" class="text-xs text-purple-400">Müəllif: -</p>
         </div>
         <div class="flex items-center space-x-2">
-          <button onclick="toggleSellerLogin()" class="bg-amber-600/20 text-amber-400 border border-amber-500/30 px-3 py-1.5 rounded-xl text-xs font-bold hover:bg-amber-600 hover:text-white transition">
+          <button type="button" onclick="toggleSellerLogin()" class="bg-amber-600/20 text-amber-400 border border-amber-500/30 px-3 py-1.5 rounded-xl text-xs font-bold hover:bg-amber-600 hover:text-white transition cursor-pointer">
             <i class="fa-solid fa-user-shield mr-1"></i> Satıcı Paneli
           </button>
-          <button onclick="toggleModal('chat-modal')" class="text-slate-400 hover:text-white text-lg ml-2">
+          <button type="button" onclick="toggleModal('chat-modal')" class="text-slate-400 hover:text-white text-lg ml-2 cursor-pointer">
             <i class="fa-solid fa-xmark"></i>
           </button>
         </div>
@@ -239,7 +239,7 @@
         </div>
         <div class="flex items-center space-x-2">
           <span id="chat-price" class="text-sm font-bold text-white bg-slate-900 px-3 py-1 rounded-xl border border-slate-800">0 AZN</span>
-          <button onclick="copyCard()" class="bg-slate-800 hover:bg-slate-700 text-slate-200 px-3 py-1.5 rounded-xl text-xs font-bold transition">
+          <button type="button" onclick="copyCard()" class="bg-slate-800 hover:bg-slate-700 text-slate-200 px-3 py-1.5 rounded-xl text-xs font-bold transition cursor-pointer">
             <i class="fa-solid fa-copy"></i>
           </button>
         </div>
@@ -274,7 +274,7 @@
           <i class="fa-solid fa-headset text-purple-400"></i>
           <span>Admin Şikayət Və Dəstək</span>
         </h3>
-        <button onclick="toggleModal('admin-modal')" class="text-slate-400 hover:text-white text-lg">
+        <button type="button" onclick="toggleModal('admin-modal')" class="text-slate-400 hover:text-white text-lg cursor-pointer">
           <i class="fa-solid fa-xmark"></i>
         </button>
       </div>
@@ -285,7 +285,7 @@
 
       <form onsubmit="sendAdminMessage(event)" class="flex space-x-2 pt-2 border-t border-slate-800">
         <input type="text" id="admin-msg-input" placeholder="Mesajınızı yazın..." class="flex-1 bg-slate-950 border border-slate-800 rounded-2xl px-4 py-2.5 text-xs text-white focus:outline-none focus:border-purple-500">
-        <button type="submit" class="bg-purple-600 hover:bg-purple-500 text-white px-4 py-2.5 rounded-2xl text-xs font-bold transition">
+        <button type="submit" class="bg-purple-600 hover:bg-purple-500 text-white px-4 py-2.5 rounded-2xl text-xs font-bold transition cursor-pointer">
           <i class="fa-solid fa-paper-plane"></i>
         </button>
       </form>
@@ -297,7 +297,7 @@
     <span id="toast-message">Məlumat</span>
   </div>
 
-  <!-- FIREBASE SDK (REAL-TIME DATABASE) -->
+  <!-- FIREBASE SDK -->
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
 
