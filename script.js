@@ -1,32 +1,25 @@
-// İLKİN MƏHSULLAR BAZASI (Simulyasiya)
-let products = [
+// İLKİN MƏHSUL BAZASI (LocalStorage təminatı ilə)
+let defaultProducts = [
   {
     id: 1,
-    title: "JavaScript Tam Praktik Dərslik",
+    title: "JavaScript Tam Praktik Dərslik (Nümunə)",
     author: "Məmməd Əliyev",
     card: "4169738812345678",
     price: 4,
-    fileUrl: "kitab.pdf",
+    fileData: null,
     image: "https://images.unsplash.com/photo-1532012197267-da84d127e765?auto=format&fit=crop&w=500&q=80"
-  },
-  {
-    id: 2,
-    title: "SMM və Rəqəmsal Marketinq Bələdçisi",
-    author: "Leyla Nəcəfova",
-    card: "4098091187654321",
-    price: 8,
-    fileUrl: "kitab.pdf",
-    image: "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=500&q=80"
   }
 ];
 
+// Məhsulları yaddaşdan (LocalStorage) oxu və ya susmaya görə təyin et
+let products = JSON.parse(localStorage.getItem("market_products")) || defaultProducts;
 let activeProduct = null;
 
 document.addEventListener("DOMContentLoaded", () => {
   renderProducts();
 });
 
-// MODALLARI AÇIB BAĞLAMAQ
+// MODALI AÇIB BAĞLAMAQ
 function toggleModal(modalId) {
   const modal = document.getElementById(modalId);
   if(modal) modal.classList.toggle("hidden");
@@ -36,15 +29,30 @@ function toggleModal(modalId) {
 function renderProducts() {
   const grid = document.getElementById("products-grid");
   const countElem = document.getElementById("product-count");
-  grid.innerHTML = "";
+  if(!grid) return;
   
+  grid.innerHTML = "";
   if(countElem) countElem.innerText = `${products.length} material`;
+
+  if(products.length === 0) {
+    grid.innerHTML = `
+      <div class="col-span-full text-center py-12 text-slate-500">
+        Hələ ki satışda heç bir material yoxdur. İlk PDF-inizi siz yükləyin!
+      </div>
+    `;
+    return;
+  }
 
   products.forEach(product => {
     const card = document.createElement("div");
-    card.className = "glass rounded-3xl overflow-hidden shadow-xl border border-slate-800 flex flex-col justify-between hover:border-purple-500/50 transition duration-300 group";
+    card.className = "glass rounded-3xl overflow-hidden shadow-xl border border-slate-800 flex flex-col justify-between hover:border-purple-500/50 transition duration-300 group relative";
 
     card.innerHTML = `
+      <!-- SİLMƏ DÜYMƏSİ (SATICI ÜÇÜN) -->
+      <button onclick="deleteProduct(${product.id})" class="absolute top-3 left-3 bg-rose-600/80 hover:bg-rose-600 text-white w-8 h-8 rounded-full flex items-center justify-center transition z-10 shadow-lg" title="Materialı Sil">
+        <i class="fa-solid fa-trash-can text-xs"></i>
+      </button>
+
       <div class="relative overflow-hidden">
         <img src="${product.image}" alt="${product.title}" class="w-full h-48 object-cover group-hover:scale-105 transition duration-500">
         <div class="absolute top-3 right-3 bg-slate-950/80 backdrop-blur-md px-3 py-1 rounded-full text-xs font-bold text-emerald-400 border border-slate-800">
@@ -68,7 +76,17 @@ function renderProducts() {
   });
 }
 
-// PDF YÜKLƏMƏ
+// MATERIALI SİLMƏK (DELETE)
+function deleteProduct(productId) {
+  if (confirm("Bu materialı silmək istədiyinizdən əminsiniz?")) {
+    products = products.filter(p => p.id !== productId);
+    saveProducts();
+    renderProducts();
+    showToast("Material uğurla silindi.", true);
+  }
+}
+
+// PDF YÜKLƏMƏK VƏ LOCALSTORAGE-DƏ SAXLAMAQ
 function handlePDFUpload(event) {
   event.preventDefault();
 
@@ -81,24 +99,35 @@ function handlePDFUpload(event) {
 
   if (!file) return;
 
-  const fileObjectUrl = URL.createObjectURL(file);
+  const reader = new FileReader();
+  reader.onload = function (e) {
+    const fileBase64 = e.target.result;
 
-  const newProduct = {
-    id: Date.now(),
-    title: title,
-    author: author,
-    card: card,
-    price: price,
-    fileUrl: fileObjectUrl,
-    image: "https://images.unsplash.com/photo-1512820790803-83ca734da794?auto=format&fit=crop&w=500&q=80"
+    const newProduct = {
+      id: Date.now(),
+      title: title,
+      author: author,
+      card: card,
+      price: price,
+      fileData: fileBase64,
+      image: "https://images.unsplash.com/photo-1512820790803-83ca734da794?auto=format&fit=crop&w=500&q=80"
+    };
+
+    products.unshift(newProduct);
+    saveProducts();
+    renderProducts();
+    toggleModal('upload-modal');
+    document.getElementById("upload-form").reset();
+
+    showToast("Təbriklər! Material satışa çıxarıldı.");
   };
 
-  products.unshift(newProduct);
-  renderProducts();
-  toggleModal('upload-modal');
-  document.getElementById("upload-form").reset();
+  reader.readAsDataURL(file);
+}
 
-  showToast("Təbriklər! PDF materialınız satışa çıxarıldı.");
+// BAZANI SAXLAMAQ
+function saveProducts() {
+  localStorage.setItem("market_products", JSON.stringify(products));
 }
 
 // ÇAT PƏNCƏRƏSİNİ AÇMAQ
@@ -111,16 +140,12 @@ function openChat(productId) {
   document.getElementById("chat-price").innerText = `${activeProduct.price} AZN`;
   document.getElementById("chat-card-number").innerText = formatCardNumber(activeProduct.card);
 
-  // Çat tarixçəsini sıfırla
   const messagesDiv = document.getElementById("chat-messages");
   messagesDiv.innerHTML = `
     <div class="bg-slate-900/90 border border-slate-800 p-3 rounded-2xl text-xs text-slate-300">
-      👋 <span class="font-bold text-purple-400">Sistem:</span> Xoş gəldiniz! Lütfən ${activeProduct.price} AZN məbləği yuxarıdakı karta köçürün və qəbzin şəklini bura göndərin.
+      👋 <span class="font-bold text-purple-400">Sistem:</span> Xoş gəldiniz! Lütfən ${activeProduct.price} AZN məbləği yuxarıdakı karta köçürün və qəbzin şəklini çata göndərin.
     </div>
   `;
-
-  // Satıcı panelini göstər
-  document.getElementById("seller-action-panel").classList.remove("hidden");
 
   toggleModal('chat-modal');
 }
@@ -132,31 +157,36 @@ function copyCard() {
   showToast("Kart nömrəsi kopyalandı!");
 }
 
-// ALICININ QƏBZ ŞƏKLİ GÖNDƏRMƏSİ
+// QƏBZ GÖNDƏRMƏK (ALICI)
 function sendReceiptMessage(event) {
   const file = event.target.files[0];
   if(!file) return;
 
-  const imageUrl = URL.createObjectURL(file);
-  const messagesDiv = document.getElementById("chat-messages");
+  const reader = new FileReader();
+  reader.onload = function (e) {
+    const imageUrl = e.target.result;
+    const messagesDiv = document.getElementById("chat-messages");
 
-  const msgHTML = `
-    <div class="flex flex-col items-end space-y-1">
-      <span class="text-[10px] text-slate-400">Siz (Alıcı)</span>
-      <div class="bg-purple-600 p-2 rounded-2xl max-w-[80%] border border-purple-400/30">
-        <p class="text-xs text-white mb-2 font-medium">Ödəniş qəbzini göndərdim, zəhmət olmasa yoxlayın:</p>
-        <img src="${imageUrl}" class="rounded-xl w-full max-h-48 object-cover cursor-pointer border border-white/20" onclick="window.open('${imageUrl}')">
+    const msgHTML = `
+      <div class="flex flex-col items-end space-y-1">
+        <span class="text-[10px] text-slate-400">Siz (Alıcı)</span>
+        <div class="bg-purple-600 p-2 rounded-2xl max-w-[80%] border border-purple-400/30">
+          <p class="text-xs text-white mb-2 font-medium">Ödəniş qəbzini göndərdim, zəhmət olmasa yoxlayın:</p>
+          <img src="${imageUrl}" class="rounded-xl w-full max-h-48 object-cover cursor-pointer border border-white/20" onclick="window.open('${imageUrl}')">
+        </div>
       </div>
-    </div>
-  `;
+    `;
 
-  messagesDiv.innerHTML += msgHTML;
-  messagesDiv.scrollTop = messagesDiv.scrollHeight;
+    messagesDiv.innerHTML += msgHTML;
+    messagesDiv.scrollTop = messagesDiv.scrollHeight;
 
-  showToast("Qəbz satıcıya göndərildi. Təsdiq gözlənilir.");
+    showToast("Qəbz satıcıya göndərildi. Təsdiq gözlənilir.");
+  };
+
+  reader.readAsDataURL(file);
 }
 
-// SATICI QƏBZi TƏSDİQLƏYİR ("QƏBZ KEÇƏRLİDİR")
+// SATICI TƏSDİQLƏYİR ("QƏBZ KEÇƏRLİDİR")
 function sellerApprove() {
   if(!activeProduct) return;
 
@@ -167,8 +197,8 @@ function sellerApprove() {
         <i class="fa-solid fa-circle-check text-base"></i>
         <span>Satıcı ödənişi təsdiqlədi!</span>
       </div>
-      <p class="text-xs text-slate-300">Materialınız yüklənməyə hazırdır.</p>
-      <button onclick="downloadPDF('${activeProduct.fileUrl}', '${activeProduct.title}')" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-2 rounded-xl text-xs transition shadow-lg shadow-emerald-600/30">
+      <p class="text-xs text-slate-300">Materialınız hazırdır.</p>
+      <button onclick="downloadPDF(activeProduct.fileData, activeProduct.title)" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-2 rounded-xl text-xs transition shadow-lg shadow-emerald-600/30">
         <i class="fa-solid fa-download mr-1"></i> PDF Materialı Endir
       </button>
     </div>
@@ -180,7 +210,7 @@ function sellerApprove() {
   showToast("Təşəkkürlər! Məhsul alıcı üçün əlçatan oldu.");
 }
 
-// SATICI İMTİNA EDİR ("QƏBZ KEÇƏRSİZDİR") -> SƏBƏB YAZMAQ MƏCBURİDİR
+// SATICI İMTİNA EDİR ("QƏBZ KEÇƏRSİZDİR")
 function sellerRejectPrompt() {
   const reason = prompt("Lütfən imtina səbəbini yazın (Məs: Pul hesabıma gəlməyib, qəbz saxtadır):");
 
@@ -206,32 +236,63 @@ function sellerRejectPrompt() {
   messagesDiv.innerHTML += msgHTML;
   messagesDiv.scrollTop = messagesDiv.scrollHeight;
 
-  console.log(`--- ADMİN BİLDİRİŞİ ---`);
-  console.log(`Məhsul: ${activeProduct.title}`);
-  console.log(`Satıcı İmtina Etdi. Səbəb: ${reason}`);
-
   showToast("İmtina səbəbi qeydə alındı və Adminə göndərildi.", true);
 }
 
-// PDF ENDİRMƏ
-function downloadPDF(url, title) {
-  const link = document.createElement("a");
-  link.href = url;
-  link.download = `${title}.pdf`;
-  document.body.appendChild(link);
-  link.click();
-  document.body.removeChild(link);
+// 100% ZƏMANƏTLİ VƏ İŞLƏK PDF ENDİRMƏ FUNKSİYASI (BLOB ÜSULU)
+function downloadPDF(base64Data, title) {
+  if (!base64Data) {
+    alert("Bu nümunə məhsuldur. Yalnız özünüzün və ya satıcının YENİ YÜKLƏDİYİ PDF-ləri endirmək mümkündür.");
+    return;
+  }
+
+  try {
+    // Base64 məlumatını sırf PDF baytlarına çeviririk
+    const parts = base64Data.split(';base64,');
+    const contentType = parts[0].split(':')[1] || 'application/pdf';
+    const raw = window.atob(parts[1]);
+    const rawLength = raw.length;
+    const uInt8Array = new Uint8Array(rawLength);
+
+    for (let i = 0; i < rawLength; ++i) {
+      uInt8Array[i] = raw.charCodeAt(i);
+    }
+
+    // Təmiz PDF Blobu yaradırıq
+    const blob = new Blob([uInt8Array], { type: contentType });
+    const blobUrl = URL.createObjectURL(blob);
+
+    // Endirmə linki yaradıb avtomatik klikləyirik
+    const link = document.createElement("a");
+    link.href = blobUrl;
+    link.download = `${title.replace(/[^a-zA-Z0-9-ƏəĞğIıİiÖöŞşÜü]/g, "_")}.pdf`;
+    document.body.appendChild(link);
+    link.click();
+
+    // Təmizlik
+    setTimeout(() => {
+      document.body.removeChild(link);
+      URL.revokeObjectURL(blobUrl);
+    }, 100);
+
+  } catch (error) {
+    console.error("PDF Endirmə xətası:", error);
+    alert("Fayl endirilərkən xəta baş verdi. Lütfən yenidən cəhd edin.");
+  }
 }
 
-// KART NÖMRƏSİNİ FORMATLAMAQ (4-4-4-4)
+// KART NÖMRƏSİNİ FORMATLAMAQ
 function formatCardNumber(cardStr) {
+  if(!cardStr) return "";
   return cardStr.replace(/(.{4})/g, '$1 ').trim();
 }
 
-// BİLDİRİŞ (TOAST)
+// TOAST BİLDİRİŞİ
 function showToast(message, isError = false) {
   const toast = document.getElementById("toast");
   const toastMessage = document.getElementById("toast-message");
+
+  if(!toast || !toastMessage) return;
 
   toastMessage.innerText = message;
   toast.classList.remove("hidden", "bg-purple-600", "bg-rose-600");
@@ -245,4 +306,5 @@ function showToast(message, isError = false) {
   setTimeout(() => {
     toast.classList.add("hidden");
   }, 4000);
-}
+      }
+      
