@@ -9,7 +9,6 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   
-  <!-- Custom Styles -->
   <style>
     body {
       background-color: #020617;
@@ -56,10 +55,10 @@
     </div>
   </header>
 
-  <!-- ƏSAS MENYU VƏ MÜƏLLİF HÜQUQLARI BİLDİRİŞİ -->
+  <!-- ƏSAS MENYU VƏ XƏBƏRDARLIQ BANNERLƏRİ -->
   <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-6">
 
-    <!-- BANNED / ANNOUNCEMENT BOX -->
+    <!-- 1. MÜƏLLİF HÜQUQLARI VƏ TƏKRAR PAYLAŞIM QADAĞASI BANNERİ -->
     <div class="bg-purple-950/40 border border-purple-500/30 backdrop-blur-md rounded-3xl p-4 sm:p-5 flex items-center justify-between shadow-xl">
       <div class="flex items-center space-x-4">
         <div class="w-12 h-12 bg-purple-600/20 text-purple-400 rounded-2xl flex items-center justify-center border border-purple-500/30 shrink-0 text-xl">
@@ -67,18 +66,33 @@
         </div>
         <div>
           <h4 class="text-sm sm:text-base font-bold text-white flex items-center gap-2">
-            <span>Müəllif hüquqları tam qorunur</span>
+            <span>Müəllif hüquqları qorunur, bir fayl ikinci dəfə paylaşıla bilmir</span>
             <span class="bg-emerald-500/20 text-emerald-400 text-[10px] px-2.5 py-0.5 rounded-full border border-emerald-500/30 font-semibold">Sistem Aktivdir</span>
           </h4>
           <p class="text-xs text-slate-300 mt-1">
-            Eyni fayl ikinci dəfə paylaşıla bilməz! Baza avtomatik dublikat faylları bloklayır və müəllif hüquqlarını qoruyur.
+            Baza tərəfindən təkrar fayl yüklənmələri avtomatik bloklanır. Platformadakı hər bir material rəsmi müəllif hüquqları ilə qorunur.
           </p>
         </div>
       </div>
     </div>
 
+    <!-- 2. ƏSAS XƏBƏRDARLIQ / DƏLƏDUZLUQ VƏ CİNAYƏT MƏCƏLLƏSİ BANNERİ -->
+    <div class="bg-rose-950/40 border border-rose-500/30 backdrop-blur-md rounded-3xl p-4 sm:p-5 flex items-start space-x-4 shadow-xl">
+      <div class="w-12 h-12 bg-rose-600/20 text-rose-400 rounded-2xl flex items-center justify-center border border-rose-500/30 shrink-0 text-xl mt-0.5">
+        <i class="fa-solid fa-scale-balanced"></i>
+      </div>
+      <div>
+        <h4 class="text-sm sm:text-base font-bold text-rose-300 flex items-center gap-2">
+          <span>XƏBƏRDARLIQ: Hüquqi Məsuliyyət Və Dələduzluq Qanunu</span>
+        </h4>
+        <p class="text-xs text-slate-300 mt-1 leading-relaxed">
+          Platformada saxta ödəniş qəbzi göndərmək, ödəniş alıb PDF materialı təqdim etməmək və ya başqasının materialını icazəsiz satmaq <strong>AR Cinayət Məcəlləsinin 178-ci maddəsi (Dələduzluq)</strong> və <strong>AR İnzibati Xətalar Məcəlləsinin 227-ci maddəsi (Xırda talama)</strong> ilə birbaşa cinayət məsuliyyəti yaradır. Bütün istifadəçilərin IP ünvanları və əməliyyat tarixçəsi bazada arxivlənir.
+        </p>
+      </div>
+    </div>
+
     <!-- BAŞLIQ VA SAYĞAC -->
-    <div class="flex items-center justify-between">
+    <div class="flex items-center justify-between pt-2">
       <div>
         <h2 class="text-2xl font-black text-white tracking-tight">Satışdakı Materiallar</h2>
         <p class="text-xs text-slate-400 mt-1">Bütün PDF-lər birbaşa müəlliflər tərəfindən yerləşdirilir.</p>
@@ -234,7 +248,7 @@
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
 
-  <!-- FIREBASE CONFIGURATION (BURAYA ÖZ FIREBASE MƏLUMATLARINIZI YAZIN) -->
+  <!-- FIREBASE CONFIGURATION -->
   <script>
     const firebaseConfig = {
       apiKey: "YOUR_API_KEY",
@@ -246,12 +260,10 @@
       appId: "YOUR_APP_ID"
     };
     
-    // Firebase təşəbbüsü
     firebase.initializeApp(firebaseConfig);
     const database = firebase.database();
   </script>
 
-  <!-- SİZİN ƏSƏRİNİZ OLAN SCRIPT.JS FAYLI -->
   <script src="script.js"></script>
 </body>
 </html>
