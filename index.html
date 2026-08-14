@@ -4,9 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>DigitalMarket - Birbaşa PDF Satışı</title>
-  <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
-  <!-- FontAwesome İkonlar -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
     .glass {
@@ -39,11 +37,10 @@
       <span class="text-2xl font-black tracking-wider gradient-text">DigitalMarket</span>
     </div>
 
-    <!-- Düymələr -->
     <div class="flex items-center space-x-3">
       <button onclick="toggleModal('rules-modal')" class="bg-slate-900/80 hover:bg-slate-800 text-slate-300 border border-slate-700/60 px-4 py-2 rounded-xl text-xs md:text-sm font-medium transition flex items-center space-x-2">
         <i class="fa-solid fa-shield-halved text-purple-400"></i>
-        <span>Qaydalar və Şərtlər</span>
+        <span>Qaydalar</span>
       </button>
 
       <button onclick="toggleModal('upload-modal')" class="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 text-white font-semibold px-4 py-2 rounded-xl text-xs md:text-sm shadow-lg shadow-purple-600/30 transition transform hover:scale-105 flex items-center space-x-2">
@@ -57,23 +54,14 @@
   <header class="py-12 text-center px-4 max-w-4xl mx-auto">
     <div class="inline-flex items-center space-x-2 bg-purple-500/10 border border-purple-500/20 px-4 py-1.5 rounded-full text-xs font-semibold text-purple-300 mb-6">
       <i class="fa-solid fa-bolt text-amber-400"></i>
-      <span>Birbaşa Kartdan-Karta Ödəniş və Avtomatik Çat</span>
+      <span>Birbaşa Kartdan-Karta Ödəniş və Təhlükəsiz Çat</span>
     </div>
     <h1 class="text-4xl md:text-6xl font-black mb-4 text-white tracking-tight">
       Rəqəmsal Kitab və Resurs Platforması
     </h1>
     <p class="text-slate-400 text-sm md:text-lg mb-8 max-w-2xl mx-auto">
-      Vasitəçisiz! Alıcılar birbaşa satıcının kartına ödəyir, qəbzi çata atır, təsdiqlənən kimi PDF əlçatan olur.
+      Vasitəçisiz! Alıcılar birbaşa satıcının kartına ödəyir, qəbzi çata atır, satıcı təsdiqləyən kimi PDF əlçatan olur.
     </p>
-
-    <!-- XƏBƏRDARLIQ BANNERİ -->
-    <div class="bg-gradient-to-r from-slate-900 via-purple-950/40 to-slate-900 border border-purple-500/30 rounded-2xl p-4 text-left max-w-2xl mx-auto flex items-start space-x-3 shadow-xl">
-      <i class="fa-solid fa-triangle-exclamation text-amber-400 text-xl mt-0.5 flex-shrink-0"></i>
-      <div class="text-xs md:text-sm text-slate-300">
-        <span class="font-bold text-amber-400 block mb-0.5">DİQQƏT: Təhlükəsizlik və Ədalət Sistemi</span>
-        Bütün əməliyyatlar və çat yazışmaları Admin nəzarətindədir. Saxta qəbz atan alıcılar və ya ödəniş alıb PDF-i təsdiqləməyən satıcılar platformadan **ömürlük ban olunur**.
-      </div>
-    </div>
   </header>
 
   <!-- MƏHSULLAR VİTRİNİ -->
@@ -86,14 +74,10 @@
       <span class="text-xs text-slate-400" id="product-count">0 material</span>
     </div>
 
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8" id="products-grid">
-      <!-- Məhsul kartları JS vasitəsilə bura yüklənəcək -->
-    </div>
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8" id="products-grid"></div>
   </main>
 
-  <!-- ==================== MODALLAR VƏ PƏNCƏRƏLƏR ==================== -->
-
-  <!-- 1. QAYDALAR VƏ ŞƏRTLƏR MODALI -->
+  <!-- QAYDALAR MODALI -->
   <div id="rules-modal" class="fixed inset-0 bg-black/80 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
     <div class="glass max-w-2xl w-full p-6 md:p-8 rounded-3xl relative border border-slate-700/80 max-h-[85vh] flex flex-col">
       <button onclick="toggleModal('rules-modal')" class="absolute top-5 right-5 text-slate-400 hover:text-white text-xl">
@@ -110,19 +94,16 @@
           <h3 class="font-bold text-purple-300 mb-1 text-sm">📌 ALICILAR ÜÇÜN QAYDALAR:</h3>
           <ul class="list-disc list-inside space-y-1">
             <li>Ödəniş yalnız ekranda göstərilən satıcının Kart Nömrəsinə edilməlidir.</li>
-            <li>Ödəniş edildikdən sonra bank tətbiqindən (Birbank/ABB və s.) rəsmi qəbzin şəkli (skrinşot) çata yüklənməlidir.</li>
-            <li>Saxta qəbz göndərən alıcıların hesabı dərhal bloklanacaq.</li>
-            <li>Satıcı imtina edərsə, Admin çat tarixçəsini və RRN kodunu yoxlayaraq materialı alıcıya birbaşa çatdıracaq.</li>
+            <li>Ödəniş edildikdən sonra rəsmi qəbzin şəkli çata yüklənməlidir.</li>
+            <li>Saxta qəbz atan alıcılar ömürlük bloklanacaq.</li>
           </ul>
         </div>
 
         <div class="bg-emerald-900/20 border border-emerald-500/20 p-4 rounded-2xl">
           <h3 class="font-bold text-emerald-300 mb-1 text-sm">📌 SATICILAR ÜÇÜN QAYDALAR:</h3>
           <ul class="list-disc list-inside space-y-1">
-            <li>Yüklənən PDF materialları müəllif hüquqlarını pozmamalıdır.</li>
-            <li>Alıcı qəbz göndərdikdə satıcı öz bank tətbiqini yoxlamalı və pul köçübsə **"Qəbz Keçərlidir"** düyməsini basmalıdır.</li>
-            <li>Əgər pul köçməyibsə, satıcı **"Qəbz Keçərsizdir"** düyməsini basıb MÜTLƏQ SƏBƏB yazmalıdır.</li>
-            <li>Pul hesabına oturduğu halda yalandan "Pul gelməyib" deyən satıcılar ban olunacaq.</li>
+            <li>Satıcılar çata daxil olub ödənişləri təsdiqləmək üçün PDF yükləyərkən təyin etdikləri **16 rəqəmli kart nömrələrini** daxil etməlidirlər.</li>
+            <li>Ödəniş gəldikdə "Qəbz Keçərlidir" düyməsini sıxmalısınız.</li>
           </ul>
         </div>
       </div>
@@ -133,7 +114,7 @@
     </div>
   </div>
 
-  <!-- 2. PDF YÜKLƏMƏ MODALI -->
+  <!-- PDF YÜKLƏMƏ MODALI -->
   <div id="upload-modal" class="fixed inset-0 bg-black/80 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
     <div class="glass max-w-md w-full p-6 rounded-3xl relative border border-slate-700">
       <button onclick="toggleModal('upload-modal')" class="absolute top-4 right-4 text-slate-400 hover:text-white text-xl">
@@ -157,7 +138,7 @@
         </div>
 
         <div>
-          <label class="block text-xs text-slate-400 mb-1">Pulun Göndəriləcəyi Kart Nömrəniz (16 Rəqəm)</label>
+          <label class="block text-xs text-slate-400 mb-1">Kart Nömrəniz (16 Rəqəm - Şifrəniz Olacaq)</label>
           <input type="text" id="seller-card" required maxlength="16" placeholder="4169 XXXX XXXX XXXX" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-2.5 text-sm font-mono text-amber-400 focus:outline-none focus:border-purple-500">
         </div>
 
@@ -178,7 +159,7 @@
     </div>
   </div>
 
-  <!-- 3. ÖDƏNİŞ VƏ ÇAT PƏNCƏRƏSİ (MODAL) -->
+  <!-- ÖDƏNİŞ VƏ ÇAT PƏNCƏRƏSİ -->
   <div id="chat-modal" class="fixed inset-0 bg-black/85 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
     <div class="glass max-w-lg w-full rounded-3xl border border-slate-700 overflow-hidden flex flex-col h-[600px] max-h-[90vh]">
       <!-- Çat Header -->
@@ -199,17 +180,24 @@
           <span id="chat-card-number">4169 XXXX XXXX XXXX</span>
           <i class="fa-regular fa-copy cursor-pointer hover:text-white text-xs" onclick="copyCard()"></i>
         </div>
-        <div class="text-[11px] text-slate-400">2. Ödəniş etdikdən sonra qəbzin şəklini aşağıdakı çata göndərin.</div>
       </div>
 
       <!-- Çat Tarixçəsi Area -->
-      <div class="flex-1 p-4 overflow-y-auto custom-scrollbar space-y-3" id="chat-messages">
-        <!-- Mesajlar JS ilə doldurulacaq -->
+      <div class="flex-1 p-4 overflow-y-auto custom-scrollbar space-y-3" id="chat-messages"></div>
+
+      <!-- SATICI REJİMİNƏ KEÇİD DÜYMƏSİ -->
+      <div class="bg-slate-950 px-4 py-2 border-t border-slate-800 flex justify-between items-center text-xs">
+        <span class="text-slate-400">Məhsulun satıcısısınız?</span>
+        <button onclick="toggleSellerLogin()" class="text-purple-400 hover:text-purple-300 font-bold underline">
+          <i class="fa-solid fa-lock mr-1"></i> Satıcı Paneline Giriş
+        </button>
       </div>
 
-      <!-- Satıcı İdarəetmə Paneli (Təsdiqləmə) -->
-      <div id="seller-action-panel" class="bg-slate-900 p-3 border-t border-slate-800 space-y-2">
-        <div class="text-xs text-slate-300 text-center font-medium">Satıcı Qəbz Yoxlama Paneli:</div>
+      <!-- SATICI İDARƏETMƏ PANELİ (GİZLİDİR) -->
+      <div id="seller-action-panel" class="bg-slate-900 p-3 border-t border-slate-800 space-y-2 hidden">
+        <div class="text-xs text-emerald-400 text-center font-bold">
+          <i class="fa-solid fa-user-shield mr-1"></i> Satıcı Girişi Qəbul Edildi!
+        </div>
         <div class="grid grid-cols-2 gap-2">
           <button onclick="sellerApprove()" class="bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold py-2.5 rounded-xl transition">
             <i class="fa-solid fa-check mr-1"></i> Qəbz Keçərlidir
@@ -220,7 +208,7 @@
         </div>
       </div>
 
-      <!-- Çat Input (Alıcı Üçün Qəbz Göndərmək) -->
+      <!-- ÇAT INPUT (ALICI ÜÇÜN) -->
       <div id="buyer-input-panel" class="p-3 bg-slate-900 border-t border-slate-800 flex items-center space-x-2">
         <input type="file" id="receipt-input" accept="image/*" class="hidden" onchange="sendReceiptMessage(event)">
         <button onclick="document.getElementById('receipt-input').click()" class="bg-purple-600 hover:bg-purple-500 text-white px-4 py-2.5 rounded-xl text-xs font-semibold flex items-center space-x-1 shadow-md transition w-full justify-center">
@@ -231,18 +219,12 @@
     </div>
   </div>
 
-  <!-- BİLDİRİŞ (TOAST) -->
+  <!-- TOAST BİLDİRİŞİ -->
   <div id="toast" class="fixed bottom-5 right-5 hidden bg-purple-600 text-white px-6 py-3 rounded-2xl shadow-2xl flex items-center space-x-3 transition z-50">
     <i class="fa-solid fa-circle-check text-xl"></i>
     <span id="toast-message">Əməliyyat tamamlandı!</span>
   </div>
 
-  <!-- FOOTER -->
-  <footer class="border-t border-slate-800/80 py-6 text-center text-slate-500 text-xs">
-    &copy; 2026 DigitalMarket. Vasitəçisiz P2P Rəqəmsal Kitab Platforması.
-  </footer>
-
   <script src="script.js"></script>
 </body>
-          </html>
-                
+</html>
