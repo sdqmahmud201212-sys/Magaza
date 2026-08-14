@@ -1,4 +1,4 @@
-          <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="az" class="dark">
 <head>
   <meta charset="UTF-8">
@@ -63,7 +63,7 @@
       Rəqəmsal Kitab və Resurs Platforması
     </h1>
     <p class="text-slate-400 text-sm md:text-lg mb-8 max-w-2xl mx-auto">
-      Vasitəçisiz, komissiyasız! Alıcılar birbaşa satıcının kartına ödəyir, qəbzi çata atır, təsdiqlənən kimi PDF əlçatan olur.
+      Vasitəçisiz! Alıcılar birbaşa satıcının kartına ödəyir, qəbzi çata atır, təsdiqlənən kimi PDF əlçatan olur.
     </p>
 
     <!-- XƏBƏRDARLIQ BANNERİ -->
@@ -111,26 +111,19 @@
           <ul class="list-disc list-inside space-y-1">
             <li>Ödəniş yalnız ekranda göstərilən satıcının Kart Nömrəsinə edilməlidir.</li>
             <li>Ödəniş edildikdən sonra bank tətbiqindən (Birbank/ABB və s.) rəsmi qəbzin şəkli (skrinşot) çata yüklənməlidir.</li>
-            <li>Saxta, redaktə olunmuş (Photoshop) qəbz göndərən alıcıların hesabı dəqiqləşdirilmədən dərhal bloklanacaq.</li>
-            <li>Satıcı imtina edərsə və haqsızlıq olarsa, Admin çat tarixçəsini və qəbzdəki RRN kodunu yoxlayaraq materialı alıcıya birbaşa çatdıracaq.</li>
+            <li>Saxta qəbz göndərən alıcıların hesabı dərhal bloklanacaq.</li>
+            <li>Satıcı imtina edərsə, Admin çat tarixçəsini və RRN kodunu yoxlayaraq materialı alıcıya birbaşa çatdıracaq.</li>
           </ul>
         </div>
 
         <div class="bg-emerald-900/20 border border-emerald-500/20 p-4 rounded-2xl">
           <h3 class="font-bold text-emerald-300 mb-1 text-sm">📌 SATICILAR ÜÇÜN QAYDALAR:</h3>
           <ul class="list-disc list-inside space-y-1">
-            <li>Yüklənən PDF materialları müəllif hüquqlarını pozmamalı, qanuni olmalıdır.</li>
+            <li>Yüklənən PDF materialları müəllif hüquqlarını pozmamalıdır.</li>
             <li>Alıcı qəbz göndərdikdə satıcı öz bank tətbiqini yoxlamalı və pul köçübsə **"Qəbz Keçərlidir"** düyməsini basmalıdır.</li>
             <li>Əgər pul köçməyibsə, satıcı **"Qəbz Keçərsizdir"** düyməsini basıb MÜTLƏQ SƏBƏB yazmalıdır.</li>
-            <li>Pul hesabına oturduğu halda yalandan "Pul gelməyib" deyərək imtina edən satıcılardan bank çıxarışı (history) tələb olunacaq. Yalanı ortaya çıxan satıcı **ban olunacaq** və materialı alıcıya Admin tərəfindən veriləcək.</li>
+            <li>Pul hesabına oturduğu halda yalandan "Pul gelməyib" deyən satıcılar ban olunacaq.</li>
           </ul>
-        </div>
-
-        <div class="bg-slate-900 p-4 rounded-2xl border border-slate-800">
-          <h3 class="font-bold text-slate-200 mb-1 text-sm">⚖️ ADMİN ARBİTRAJ SİSTEMİ:</h3>
-          <p>
-            Mübahisəli vəziyyətlərdə son söz platforma Admininə məxsusdur. Admin qəbzdəki unikal **RRN əməliyyat kodu** ilə bank yoxlaması aparmaq hüququna malikdir.
-          </p>
         </div>
       </div>
 
@@ -214,9 +207,9 @@
         <!-- Mesajlar JS ilə doldurulacaq -->
       </div>
 
-      <!-- Satıcı İdarəetmə Paneli (Avtomatik Görünəcək) -->
-      <div id="seller-action-panel" class="bg-slate-900 p-3 border-t border-slate-800 space-y-2 hidden">
-        <div class="text-xs text-slate-300 text-center font-medium">Satıcı Təsdiq Paneli:</div>
+      <!-- Satıcı İdarəetmə Paneli (Təsdiqləmə) -->
+      <div id="seller-action-panel" class="bg-slate-900 p-3 border-t border-slate-800 space-y-2">
+        <div class="text-xs text-slate-300 text-center font-medium">Satıcı Qəbz Yoxlama Paneli:</div>
         <div class="grid grid-cols-2 gap-2">
           <button onclick="sellerApprove()" class="bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold py-2.5 rounded-xl transition">
             <i class="fa-solid fa-check mr-1"></i> Qəbz Keçərlidir
@@ -227,14 +220,13 @@
         </div>
       </div>
 
-      <!-- Çat Input (Alıcı Üçün) -->
+      <!-- Çat Input (Alıcı Üçün Qəbz Göndərmək) -->
       <div id="buyer-input-panel" class="p-3 bg-slate-900 border-t border-slate-800 flex items-center space-x-2">
         <input type="file" id="receipt-input" accept="image/*" class="hidden" onchange="sendReceiptMessage(event)">
-        <button onclick="document.getElementById('receipt-input').click()" class="bg-purple-600 hover:bg-purple-500 text-white px-4 py-2.5 rounded-xl text-xs font-semibold flex items-center space-x-1 shadow-md transition">
+        <button onclick="document.getElementById('receipt-input').click()" class="bg-purple-600 hover:bg-purple-500 text-white px-4 py-2.5 rounded-xl text-xs font-semibold flex items-center space-x-1 shadow-md transition w-full justify-center">
           <i class="fa-solid fa-paperclip"></i>
-          <span>Qəbz Şəkli At</span>
+          <span>Ödəniş Qəbzinin Şəklini At</span>
         </button>
-        <div class="text-[10px] text-slate-500 flex-1 text-right">Qəbzi atan kimi satıcıya bildiriş gedir.</div>
       </div>
     </div>
   </div>
@@ -253,4 +245,4 @@
   <script src="script.js"></script>
 </body>
           </html>
-          
+                
