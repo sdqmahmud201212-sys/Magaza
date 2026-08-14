@@ -4,9 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>DigitalMarket - Sikkə ilə PDF Satışı</title>
-  <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
-  <!-- FontAwesome İkonlar -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
     .glass {
@@ -25,48 +23,144 @@
       <span class="text-xl font-bold bg-gradient-to-r from-indigo-400 to-pink-500 bg-clip-text text-transparent">DigitalMarket</span>
     </div>
 
-    <!-- Balans və Əməliyyat Panel -->
-    <div class="flex items-center space-x-6">
+    <!-- Balans və Ödəniş Düyməsi -->
+    <div class="flex items-center space-x-4">
       <div class="bg-slate-900 border border-slate-700 px-4 py-2 rounded-full flex items-center space-x-2">
         <i class="fa-solid fa-coins text-amber-400 text-lg"></i>
-        <span class="font-semibold text-slate-200" id="user-coins">0</span>
+        <span class="font-semibold text-slate-200" id="user-coins">5</span>
         <span class="text-xs text-slate-400">Sikkə</span>
       </div>
-      <button onclick="addCoins()" class="bg-indigo-600 hover:bg-indigo-500 text-white px-4 py-2 rounded-full text-sm font-medium transition flex items-center space-x-2 shadow-lg shadow-indigo-600/30">
+      <button onclick="togglePaymentModal()" class="bg-indigo-600 hover:bg-indigo-500 text-white px-4 py-2 rounded-full text-xs md:text-sm font-medium transition shadow-lg shadow-indigo-600/30 flex items-center space-x-1">
         <i class="fa-solid fa-plus"></i>
-        <span>Sikkə Artır</span>
+        <span>Sikkə Al</span>
       </button>
     </div>
   </nav>
 
   <!-- HERO SECTION -->
-  <header class="py-12 text-center px-4 max-w-3xl mx-auto">
-    <h1 class="text-4xl md:text-5xl font-extrabold mb-4 bg-gradient-to-r from-white via-slate-200 to-indigo-300 bg-clip-text text-transparent">
+  <header class="py-10 text-center px-4 max-w-3xl mx-auto">
+    <h1 class="text-3xl md:text-5xl font-extrabold mb-4 text-white">
       Rəqəmsal Kitablar və Materiallar
     </h1>
-    <p class="text-slate-400 text-lg">
-      Sikkələrinizlə istədiyiniz PDF məhsulu anında alın, avtomatik şəxsi kabinetinizə yüklənsin. 
+    <p class="text-slate-400 text-sm md:text-base mb-6">
+      PDF alın və ya öz rəqəmsal materialınızı sistemə yükləyib sikkə qazanın! 
       <br><span class="text-indigo-400 font-medium">(Məzənnə: 5 Sikkə = 1 AZN)</span>
     </p>
+
+    <!-- SATICILAR ÜÇÜN XƏBƏRDARLIQ LÖVHƏSİ -->
+    <div class="bg-amber-500/10 border border-amber-500/30 rounded-2xl p-4 mb-6 max-w-xl mx-auto text-left flex items-start space-x-3">
+      <i class="fa-solid fa-circle-info text-amber-400 text-xl mt-0.5 flex-shrink-0"></i>
+      <div class="text-xs md:text-sm text-slate-300">
+        <span class="font-bold text-amber-400 block mb-1">📢 Satıcıların Nəzərinə:</span>
+        Sistemdə 5% platforma komissiyası tətbiq olunur. Məsələn, 10 sikkəyə satışa qoyduğunuz material satıldıqda 9 sikkə birbaşa sizin balansınıza keçəcəkdir.
+      </div>
+    </div>
+
+    <!-- PDF YÜKLƏ DÜYMƏSİ -->
+    <button onclick="toggleUploadModal()" class="bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-400 hover:to-teal-500 text-white font-bold px-6 py-3 rounded-2xl shadow-lg transition transform hover:scale-105 flex items-center mx-auto space-x-2">
+      <i class="fa-solid fa-cloud-arrow-up text-lg"></i>
+      <span>Öz PDF-ini Yüklə və Sat</span>
+    </button>
   </header>
 
-  <!-- MƏHSULLAR SƏHİFƏSİ (VİTRİN) -->
-  <main class="max-w-6xl mx-auto px-6 py-8 flex-1 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8" id="products-grid">
-    <!-- Məhsullar JS tərəfindən dinamik yüklənəcək -->
-  </main>
+  <!-- SİKKƏ ALMA / ÖDƏNİŞ MODAL-I -->
+  <div id="payment-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+    <div class="glass max-w-md w-full p-6 rounded-3xl relative border border-slate-700">
+      <button onclick="togglePaymentModal()" class="absolute top-4 right-4 text-slate-400 hover:text-white text-xl">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
 
-  <!-- BİLDİRİŞ (TOAST NOTIFICATION) -->
-  <div id="toast" class="fixed bottom-5 right-5 hidden bg-emerald-600 text-white px-6 py-3 rounded-lg shadow-xl flex items-center space-x-3 transition-all transform translate-y-2">
-    <i class="fa-solid fa-circle-check text-xl"></i>
-    <span id="toast-message">Məhsul uğurla alındı!</span>
+      <h2 class="text-xl font-bold mb-2 text-indigo-400 flex items-center space-x-2">
+        <i class="fa-solid fa-coins text-amber-400"></i>
+        <span>Sikkə Balansı Artır</span>
+      </h2>
+      <p class="text-xs text-slate-400 mb-4">Məzənnə: 5 Sikkə = 1 AZN</p>
+      
+      <div class="space-y-4">
+        <div>
+          <label class="block text-xs text-slate-400 mb-1">Neçə Sikkə almaq istəyirsiniz?</label>
+          <select id="coin-package" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-2 text-sm text-white focus:outline-none focus:border-indigo-500">
+            <option value="10">10 Sikkə (2 AZN)</option>
+            <option value="25">25 Sikkə (5 AZN)</option>
+            <option value="50">50 Sikkə (10 AZN)</option>
+            <option value="100">100 Sikkə (20 AZN)</option>
+          </select>
+        </div>
+
+        <div class="bg-slate-900/80 p-4 rounded-xl border border-slate-800 space-y-2">
+          <div class="text-xs text-slate-300 font-semibold">Ödəniş Təlimatı:</div>
+          <div class="text-xs text-slate-400">1. Qeyd olunan məbləği kart hesabına göndərin:</div>
+          <div class="text-sm font-mono text-amber-400 bg-slate-950 p-2 rounded text-center select-all border border-slate-800">
+            4169 7388 XXXX XXXX
+          </div>
+          <div class="text-xs text-slate-400">2. Ödəniş qeydində (şərhdə) bu KODU yazın:</div>
+          <div class="text-sm font-bold text-indigo-400 bg-slate-950 p-2 rounded text-center border border-slate-800" id="user-payment-code">
+            KOD-8392
+          </div>
+        </div>
+
+        <button onclick="submitPaymentRequest()" class="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-bold py-3 rounded-xl transition shadow-lg shadow-indigo-600/30">
+          Ödəniş Etdim (Təsdiq Göndər)
+        </button>
+      </div>
+    </div>
   </div>
 
-  <!-- FOOTER -->
+  <!-- PDF YÜKLƏMƏ MODAL-I -->
+  <div id="upload-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+    <div class="glass max-w-md w-full p-6 rounded-3xl relative border border-slate-700">
+      <button onclick="toggleUploadModal()" class="absolute top-4 right-4 text-slate-400 hover:text-white text-xl">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+
+      <h2 class="text-xl font-bold mb-4 text-emerald-400 flex items-center space-x-2">
+        <i class="fa-solid fa-file-circle-plus"></i>
+        <span>Yeni PDF Satışa Çıxar</span>
+      </h2>
+      
+      <form id="upload-form" onsubmit="handlePDFUpload(event)" class="space-y-4">
+        <div>
+          <label class="block text-xs text-slate-400 mb-1">Kitabın / Materialın Adı</label>
+          <input type="text" id="pdf-title" required placeholder="Məs: JavaScript Əsasları" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-2 text-sm text-white focus:outline-none focus:border-indigo-500">
+        </div>
+
+        <div>
+          <label class="block text-xs text-slate-400 mb-1">Müəllif / Satıcı Adı</label>
+          <input type="text" id="pdf-author" required placeholder="Adınız" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-2 text-sm text-white focus:outline-none focus:border-indigo-500">
+        </div>
+
+        <div>
+          <label class="block text-xs text-slate-400 mb-1">Qiymət (Sikkə ilə)</label>
+          <input type="number" id="pdf-price" required min="1" placeholder="Məs: 10" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-2 text-sm text-white focus:outline-none focus:border-indigo-500">
+        </div>
+
+        <div>
+          <label class="block text-xs text-slate-400 mb-1">PDF Faylı Seçin</label>
+          <input type="file" id="pdf-file" accept=".pdf" required class="w-full text-xs text-slate-400 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-indigo-600 file:text-white hover:file:bg-indigo-500 cursor-pointer">
+        </div>
+
+        <button type="submit" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-3 rounded-xl transition mt-2 shadow-lg shadow-emerald-600/30">
+          Sayta Əlavə Et
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- MƏHSULLAR VİTRİNİ -->
+  <main class="max-w-6xl mx-auto px-6 py-8 flex-1 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8" id="products-grid">
+  </main>
+
+  <!-- BİLDİRİŞ -->
+  <div id="toast" class="fixed bottom-5 right-5 hidden bg-emerald-600 text-white px-6 py-3 rounded-xl shadow-2xl flex items-center space-x-3 transition">
+    <i class="fa-solid fa-circle-check text-xl"></i>
+    <span id="toast-message">Əməliyyat icra olundu!</span>
+  </div>
+
   <footer class="border-t border-slate-800 py-6 text-center text-slate-500 text-sm">
     &copy; 2026 DigitalMarket. Bütün hüquqlar qorunur. (5% Avtomatik Platforma Komissiyası)
   </footer>
 
   <script src="script.js"></script>
 </body>
-  </html>
-  
+        </html>
+        
