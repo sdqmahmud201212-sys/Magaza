@@ -63,6 +63,26 @@
   <!-- ƏSAS MENYU VƏ ANA SƏHİFƏ -->
   <main id="main-content" class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-6">
 
+    <!-- Tünd Qırmızı Fondan Vahiməli Hüquqi Xəbərdarlıq Banneri -->
+    <div class="bg-red-950/80 border-2 border-red-600/70 backdrop-blur-md rounded-3xl p-5 sm:p-6 flex flex-col md:flex-row items-start md:items-center justify-between gap-4 shadow-2xl shadow-red-950/50">
+      <div class="flex items-start sm:items-center space-x-4">
+        <div class="w-12 h-12 bg-red-600/30 text-red-400 rounded-2xl flex items-center justify-center border border-red-500/40 shrink-0 text-2xl">
+          <i class="fa-solid fa-triangle-exclamation animate-pulse"></i>
+        </div>
+        <div class="space-y-1">
+          <h4 class="text-sm sm:text-base font-black text-red-200 tracking-tight leading-snug">
+            ⚠️ RƏSMİ HÜQUQİ XƏBƏRDARLIQ VƏ CİDDİ MƏSULİYYƏT BİLDİRİŞİ!
+          </h4>
+          <p class="text-xs text-red-300 font-semibold leading-relaxed">
+            DİQQƏT! BU QAYDALARIN POZULMASI AĞIR HÜQUQİ NƏTİCƏLƏR VƏ CİNAYƏT MƏSULİYYƏTİ TƏDBİRLƏRİLƏ NƏTİCƏLƏNƏCƏK!
+          </p>
+        </div>
+      </div>
+      <button type="button" onclick="toggleModal('legal-warning-modal')" class="w-full md:w-auto bg-red-600 hover:bg-red-700 text-white px-5 py-2.5 rounded-xl text-xs font-black uppercase tracking-wider transition text-center cursor-pointer shadow-lg shadow-red-600/40 shrink-0">
+        Ətraflı Oxu
+      </button>
+    </div>
+
     <!-- Xəbərdarlıq Bannerləri -->
     <div class="bg-purple-950/40 border border-purple-500/30 backdrop-blur-md rounded-3xl p-4 sm:p-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 shadow-xl">
       <div class="flex items-center space-x-4">
@@ -127,6 +147,44 @@
     <p>© 2026 PDF Market. Bütün hüquqlar qorunur.</p>
   </footer>
 
+  <!-- MODAL: HÜQUQİ XƏBƏRDARLIQ DETALLARI -->
+  <div id="legal-warning-modal" class="fixed inset-0 bg-slate-950/90 backdrop-blur-md flex items-center justify-center p-4 z-50 hidden">
+    <div class="bg-slate-900 border-2 border-red-600/60 w-full max-w-2xl rounded-3xl p-6 relative shadow-2xl space-y-4 max-h-[85vh] flex flex-col">
+      <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+        <h3 class="text-sm sm:text-base font-black text-red-400 flex items-center space-x-2">
+          <i class="fa-solid fa-triangle-exclamation"></i>
+          <span>RƏSMİ HÜQUQİ VƏ CİNAYƏT MƏSULİYYƏTİ BİLDİRİŞİ</span>
+        </h3>
+        <button type="button" onclick="toggleModal('legal-warning-modal')" class="text-slate-400 hover:text-white text-lg cursor-pointer">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <div class="flex-1 overflow-y-auto space-y-3 text-xs text-slate-300 pr-2 leading-relaxed">
+        <div class="bg-red-950/40 border border-red-900/50 p-4 rounded-2xl space-y-1.5">
+          <h4 class="font-bold text-red-400">1. Unikal İdentifikasiya və Qəti Bloklama</h4>
+          <p>Sistemimiz hər bir faylın rəqəmsal imzasını (hash) avtomatik olaraq qeydə alır. Başqasına məxsus PDF faylını, kitabını və ya əməyini oğurlayıb öz adı ilə təkrar satışa çıxarmağa cəhd edən şəxslərin <strong>bütün hesabları dərhal və geri dönüşsüz olaraq silinəcək, İP ünvanları qara siyahıya (blacklist) salınacaqdır.</strong></p>
+        </div>
+        <div class="bg-red-950/40 border border-red-900/50 p-4 rounded-2xl space-y-1.5">
+          <h4 class="font-bold text-red-400">2. Müəllif Hüquqlarının Pozulması (Kriminal Məsuliyyət)</h4>
+          <p>Azərbaycan Respublikasının Müəllif Hüquqları və Əlaqəli Hüquqlar haqqında Qanunvericiliyinə, eləcə də Cinayət Məcəlləsinin müvafiq maddələrinə əsasən, intellektual mülkiyyətin qanunsuz yayılması, piratçılıq və oğurluq materialların kommersiya məqsədilə satışı <strong>ağır cərimələr və ya azadlıqdan məhrumetmə cəzası</strong> ilə cəzalandırılır.</p>
+        </div>
+        <div class="bg-red-950/40 border border-red-900/50 p-4 rounded-2xl space-y-1.5">
+          <h4 class="font-bold text-red-400">3. Məlumatların Birbaşa Təqib Edilməsi</h4>
+          <p>Hər bir satıcının daxil etdiyi Gmail, şifrə, telefon nömrəsi və kart məlumatları şifrələnmiş şəkildə qorunur və hər hansı qanunsuzluq (dələduzluq, saxta qəbz, başqasının əməyini mənimsəmə) aşkarlandığı an <strong>bütün şəxsi məlumatlarınız hüquq-mühafizə orqanlarına (Polisə və Kibertəhlükəsizlik Xidmətinə) birbaşa təqdim olunacaqdır.</strong></p>
+        </div>
+        <div class="bg-red-950/40 border border-red-900/50 p-4 rounded-2xl space-y-1.5">
+          <h4 class="font-bold text-red-400">4. Məsuliyyət İmtinası</h4>
+          <p>Platforma yalnız vasitəçidir. Saxtakarılıq edən, alıcını aldatmağa çalışan və ya başqasının faylını oğurlayan hər kəs törətdiyi əmələ görə <strong>şəxsən və tam hüquqi məsuliyyət daşıyır</strong>.</p>
+        </div>
+      </div>
+
+      <button type="button" onclick="toggleModal('legal-warning-modal')" class="w-full bg-red-600 hover:bg-red-700 text-white font-black py-3 rounded-2xl text-xs transition cursor-pointer uppercase tracking-wider">
+        Anladım və Qəbul Edirəm
+      </button>
+    </div>
+  </div>
+
   <!-- MODAL: QAYDALAR VƏ TƏLİMATLAR -->
   <div id="rules-modal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-4 z-50 hidden">
     <div class="bg-slate-900 border border-slate-800 w-full max-w-2xl rounded-3xl p-6 relative shadow-2xl space-y-4 max-h-[85vh] flex flex-col">
@@ -190,7 +248,7 @@
     </div>
   </div>
 
-  <!-- MODAL: MƏHSUL YÜKLƏMƏ PƏNCƏRƏSİ (Məcburi Description, Nömrə, Gmail və Şifrə ilə) -->
+  <!-- MODAL: MƏHSUL YÜKLƏMƏ PƏNCƏRƏSİ -->
   <div id="upload-modal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-4 z-50 hidden">
     <div class="bg-slate-900 border border-slate-800 w-full max-w-lg rounded-3xl p-6 relative shadow-2xl space-y-4 max-h-[90vh] overflow-y-auto">
       <button type="button" onclick="toggleModal('upload-modal')" class="absolute top-4 right-4 text-slate-400 hover:text-white text-lg cursor-pointer">
@@ -260,75 +318,4 @@
 
   <!-- MODAL: ÇAT VƏ ALINMA PƏNCƏRƏSİ -->
   <div id="chat-modal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-4 z-50 hidden">
-    <div class="bg-slate-900 border border-slate-800 w-full max-w-xl rounded-3xl p-6 relative shadow-2xl flex flex-col h-[85vh]">
-      
-      <div class="flex items-center justify-between border-b border-slate-800 pb-3">
-        <div>
-          <h3 id="chat-product-title" class="text-sm font-bold text-white">Məhsul Başlığı</h3>
-          <p id="chat-seller-info" class="text-xs text-purple-400">Müəllif: - | Nömrə: -</p>
-        </div>
-        <button type="button" onclick="toggleModal('chat-modal')" class="text-slate-400 hover:text-white text-lg cursor-pointer">
-          <i class="fa-solid fa-xmark"></i>
-        </button>
-      </div>
-
-      <!-- Xəbərdarlıq Təlimatı -->
-      <div class="bg-amber-500/10 border border-amber-500/30 rounded-2xl p-3 my-2 text-[11px] text-amber-300 leading-tight">
-        <i class="fa-solid fa-triangle-exclamation mr-1"></i> <strong>Vacib:</strong> Ödənişi edib qəbzi göndərin. Satıcı online deyilmi? <strong>3-4 saat içində cavab gəlməsə nömrəyə yazın.</strong>
-      </div>
-
-      <!-- Kart Məlumatları -->
-      <div class="bg-slate-950 border border-slate-800 rounded-2xl p-3 my-2 flex items-center justify-between">
-        <div>
-          <span class="text-[10px] text-slate-400 uppercase tracking-widest block">Ödəniş Ediləcək Kart</span>
-          <span id="chat-card-number" class="text-sm font-black text-emerald-400 font-mono">0000 0000 0000 0000</span>
-        </div>
-        <div class="flex items-center space-x-2">
-          <span id="chat-price" class="text-sm font-bold text-white bg-slate-900 px-3 py-1 rounded-xl border border-slate-800">0 AZN</span>
-          <button type="button" onclick="copyCard()" class="bg-slate-800 hover:bg-slate-700 text-slate-200 px-3 py-1.5 rounded-xl text-xs font-bold transition cursor-pointer">
-            <i class="fa-solid fa-copy"></i>
-          </button>
-        </div>
-      </div>
-
-      <div id="chat-messages" class="flex-1 overflow-y-auto space-y-3 pr-2 my-2">
-        <div class="bg-slate-950 p-3 rounded-2xl text-xs text-slate-300">
-          Salam! Materialı almaq üçün kart nömrəsinə ödəniş edib qəbzi aşağıdan yükləyin. Satıcıya Gmail vasitəsilə bildiriş göndərildi.
-        </div>
-      </div>
-
-      <div class="border-t border-slate-800 pt-3">
-        <label class="block w-full bg-purple-600 hover:bg-purple-500 text-white font-bold py-3 rounded-2xl text-xs text-center cursor-pointer transition shadow-lg shadow-purple-600/20">
-          <i class="fa-solid fa-receipt mr-1"></i> Ödəniş Qəbzinin Şəklini Yüklə və Alış Et
-          <input type="file" accept="image/*" onchange="sendReceiptMessage(event)" class="hidden">
-        </label>
-      </div>
-
-    </div>
-  </div>
-
-  <div id="toast" class="fixed bottom-5 right-5 bg-purple-600 text-white text-xs font-bold px-5 py-3 rounded-2xl shadow-2xl hidden z-50 transition">
-    <span id="toast-message">Məlumat</span>
-  </div>
-
-  <!-- FIREBASE SDK -->
-  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
-
-  <script>
-    const firebaseConfig = {
-      apiKey: "YOUR_API_KEY",
-      authDomain: "YOUR_PROJECT.firebaseapp.com",
-      databaseURL: "https://YOUR_PROJECT-default-rtdb.firebaseio.com",
-      projectId: "YOUR_PROJECT",
-      storageBucket: "YOUR_PROJECT.appspot.com",
-      messagingSenderId: "123456789",
-      appId: "YOUR_APP_ID"
-    };
-    firebase.initializeApp(firebaseConfig);
-    const database = firebase.database();
-  </script>
-
-  <script src="script.js"></script>
-</body>
-</html>
+    <div class="bg-slate-900 border border-slate-800 w-full max-w-xl rounded-3xl p-6 relative
