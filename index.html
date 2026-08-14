@@ -3,19 +3,18 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>DigitalMarket - Birbaşa PDF Satışı</title>
+  <title>DigitalMarket - Təhlükəsiz PDF Platforması</title>
   
-  <!-- UI və Dizayn Kitabxanaları -->
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   
-  <!-- FIREBASE CANLI BAZA KITABXANALARI -->
+  <!-- FIREBASE BAZA KITABXANALARI -->
   <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
 
   <style>
     .glass {
-      background: rgba(15, 23, 42, 0.75);
+      background: rgba(15, 23, 42, 0.85);
       backdrop-filter: blur(16px);
       border: 1px solid rgba(255, 255, 255, 0.08);
     }
@@ -30,8 +29,14 @@
 </head>
 <body class="bg-slate-950 text-slate-100 font-sans min-h-screen flex flex-col custom-scrollbar">
 
-  <!-- NAVBAR / BAŞLIQ -->
-  <nav class="glass sticky top-0 z-50 px-6 py-4 flex justify-between items-center border-b border-slate-800/80 shadow-2xl">
+  <!-- RƏSMİ TƏHLÜKƏSİZLİK BANERİ (POLİS İZLƏMƏSİ XƏBƏRDARLIĞI) -->
+  <div class="bg-rose-950/90 border-b border-rose-600/50 px-4 py-2 text-center text-xs text-rose-200 font-semibold flex items-center justify-center space-x-2">
+    <i class="fa-solid fa-shield-cat text-rose-400 text-sm animate-pulse"></i>
+    <span>DƏLƏDUZLUĞA QARŞI XƏBƏRDARLIQ: Bu platformada bütün əməliyyatlar və IP ünvanlar qeydə alınır. Dələduzluq halları dərhal Hüquq-Mühafizə Organlarına (Polisə) təqdim olunur!</span>
+  </div>
+
+  <!-- NAVBAR -->
+  <nav class="glass sticky top-0 z-40 px-6 py-4 flex justify-between items-center border-b border-slate-800/80 shadow-2xl">
     <div class="flex items-center space-x-3 cursor-pointer" onclick="window.scrollTo({top: 0, behavior: 'smooth'})">
       <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-purple-600 to-pink-500 flex items-center justify-center shadow-lg shadow-purple-500/30">
         <i class="fa-solid fa-file-pdf text-white text-xl"></i>
@@ -41,8 +46,8 @@
 
     <div class="flex items-center space-x-3">
       <button onclick="toggleModal('rules-modal')" class="bg-slate-900/80 hover:bg-slate-800 text-slate-300 border border-slate-700/60 px-4 py-2 rounded-xl text-xs md:text-sm font-medium transition flex items-center space-x-2">
-        <i class="fa-solid fa-shield-halved text-purple-400"></i>
-        <span>Qaydalar</span>
+        <i class="fa-solid fa-scale-balanced text-amber-400"></i>
+        <span>Qaydalar və Məsuliyyət</span>
       </button>
 
       <button onclick="toggleModal('upload-modal')" class="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 text-white font-semibold px-4 py-2 rounded-xl text-xs md:text-sm shadow-lg shadow-purple-600/30 transition transform hover:scale-105 flex items-center space-x-2">
@@ -54,11 +59,14 @@
 
   <!-- HERO SECTION -->
   <header class="py-10 text-center px-4 max-w-4xl mx-auto">
-    <div class="inline-flex items-center space-x-2 bg-purple-500/10 border border-purple-500/20 px-4 py-1.5 rounded-full text-xs font-semibold text-purple-300 mb-4">
-      <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-      <span>Canlı Firebase Bazası Aktivdir</span>
+    <div class="inline-flex items-center space-x-2 bg-emerald-500/10 border border-emerald-500/20 px-4 py-1.5 rounded-full text-xs font-semibold text-emerald-300 mb-4">
+      <i class="fa-solid fa-lock text-emerald-400"></i>
+      <span>Canlı Baza Və İzlənilən Təhlükəsiz Sistem</span>
     </div>
-    <h1 class="text-3xl md:text-5xl font-black text-white tracking-tight">Rəqəmsal Kitab və Material Platforması</h1>
+    <h1 class="text-3xl md:text-5xl font-black text-white tracking-tight mb-3">Rəqəmsal Kitab Və Material Platforması</h1>
+    <p class="text-xs md:text-sm text-slate-400 max-w-2xl mx-auto">
+      Ödənişləri birbaşa satıcının kartına edin və qəbzi çata yükleyin. Dələduzluq halında şəxsiyyət və bank məlumatları dərhal polisə təqdim edilir.
+    </p>
   </header>
 
   <!-- MƏHSULLAR VİTRİNİ -->
@@ -73,21 +81,49 @@
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8" id="products-grid"></div>
   </main>
 
-  <!-- QAYDALAR MODALI -->
+  <!-- ADMIN / DƏSTƏK ÇATI DÜYMƏSİ (ÜZƏN) -->
+  <button onclick="toggleModal('admin-chat-modal')" class="fixed bottom-6 right-6 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white p-4 rounded-full shadow-2xl z-40 transition transform hover:scale-110 flex items-center space-x-2 border border-blue-400/40">
+    <i class="fa-solid fa-headset text-xl"></i>
+    <span class="text-xs font-bold hidden md:inline">Adminlə Çat / Şikayət</span>
+  </button>
+
+  <!-- QAYDALAR VƏ HÜQUQİ MƏSULİYYƏT MODALI (ƏTRAFLI) -->
   <div id="rules-modal" class="fixed inset-0 bg-black/80 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
-    <div class="glass max-w-md w-full p-6 rounded-3xl relative border border-slate-700">
-      <button onclick="toggleModal('rules-modal')" class="absolute top-4 right-4 text-slate-400 hover:text-white text-xl">
+    <div class="glass max-w-2xl w-full p-6 md:p-8 rounded-3xl relative border border-slate-700 max-h-[90vh] overflow-y-auto custom-scrollbar">
+      <button onclick="toggleModal('rules-modal')" class="absolute top-5 right-5 text-slate-400 hover:text-white text-xl">
         <i class="fa-solid fa-xmark"></i>
       </button>
-      <h2 class="text-xl font-bold mb-4 text-purple-400 flex items-center gap-2">
-        <i class="fa-solid fa-shield-halved"></i> Platforma Qaydaları
-      </h2>
-      <ul class="text-xs text-slate-300 space-y-3 list-disc pl-4">
-        <li>Ödənişləri birbaşa satıcının təqdim etdiyi karta köçürün.</li>
-        <li>Ödəniş etdikdən sonra çata qəbzin şəklini göndərin.</li>
-        <li>Satıcı ödənişi təsdiqlədikdə PDF avtomatik açılacaq.</li>
-      </ul>
-      <button onclick="toggleModal('rules-modal')" class="w-full mt-6 bg-purple-600 hover:bg-purple-500 text-white font-bold py-2.5 rounded-xl text-sm">Anladım</button>
+
+      <div class="flex items-center space-x-3 text-rose-500 mb-4">
+        <i class="fa-solid fa-gavel text-2xl"></i>
+        <h2 class="text-2xl font-black text-white">Platforma Qaydaları Və Hüquqi Xəbərdarlıq</h2>
+      </div>
+
+      <div class="space-y-4 text-xs md:text-sm text-slate-300">
+        <div class="bg-rose-950/40 border border-rose-500/30 p-4 rounded-2xl">
+          <h3 class="font-bold text-rose-400 mb-1"><i class="fa-solid fa-triangle-exclamation mr-1"></i> Dələduzluq Halında Nə Olacaq?</h3>
+          <p class="leading-relaxed">
+            Satıcı alıcıdan ödənişi alıb materialı göndərməzsə və ya saxta material təqdim edərsə, bu əməl <strong>AR Cinayət Məcəlləsinin 178-ci maddəsi (Dələduzluq)</strong> tərkibi yaradır.
+          </p>
+        </div>
+
+        <h3 class="font-bold text-white text-base">Əsas Təhlükəsizlik Qaydaları:</h3>
+        <ul class="list-disc pl-5 space-y-2">
+          <li><strong>Qeydiyyat Və İzləmə:</strong> Saytda satıcının daxil etdiyi 16 rəqəmli kart nömrəsi, IP ünvanı və əməliyyat vaxtı bazada arxivlənir.</li>
+          <li><strong>Polisə Şikayət Proseduru:</strong> Dələduzluq baş verdikdə alıcının çat qəbzilə birlikdə Adminə şikayət etməsi yetərlidir. Bütün loglar (IP, Kart nömrəsi, çat yazışması) dərhal rəsmi şəkildə Daxili İşlər Nazirliyinin Kibercinayətkarlıqla Mübarizə Baş İdarəsinə təqdim edilir.</li>
+          <li><strong>Ödəniş Təsdiqi:</strong> Ödənişi yalnız çata qəbz göndərdikdən sonra gözləyin. Ödəniş etmədən saxta qəbz atan alıcıların da hesabı bloklanacaqdır.</li>
+        </ul>
+
+        <div class="bg-slate-900 p-4 rounded-2xl border border-slate-800">
+          <p class="text-xs text-slate-400">
+            * Qeyd: Platforma P2P (şəxsdən-şəxsə) vasitəçilik edir. Yaranan mübahisələrdə inzibatçılıq logları hüquq-mühafizə orqanlarına ötürmək öhdəliyini üzərinə götürür.
+          </p>
+        </div>
+      </div>
+
+      <button onclick="toggleModal('rules-modal')" class="w-full mt-6 bg-purple-600 hover:bg-purple-500 text-white font-bold py-3 rounded-xl text-sm transition">
+        Anladım Və Qaydaları Qəbul Edirəm
+      </button>
     </div>
   </div>
 
@@ -109,10 +145,9 @@
     </div>
   </div>
 
-  <!-- ÇAT VƏ ÖDƏNİŞ MODALI -->
+  <!-- ALICI VƏ SATICI ÇAT MODALI -->
   <div id="chat-modal" class="fixed inset-0 bg-black/85 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
     <div class="glass max-w-lg w-full rounded-3xl border border-slate-700 overflow-hidden flex flex-col h-[600px] max-h-[90vh]">
-      <!-- Çat Header -->
       <div class="bg-slate-900 px-6 py-4 border-b border-slate-800 flex justify-between items-center">
         <div>
           <h3 class="font-bold text-white text-base" id="chat-product-title">Material Adı</h3>
@@ -121,7 +156,6 @@
         <button onclick="toggleModal('chat-modal')" class="text-slate-400 hover:text-white text-xl"><i class="fa-solid fa-xmark"></i></button>
       </div>
 
-      <!-- Kart Məlumatı -->
       <div class="bg-purple-950/40 p-4 border-b border-slate-800 space-y-2">
         <div class="text-xs text-slate-300">Ödənişi bu karta edin: <span id="chat-price" class="font-bold text-amber-400">0 AZN</span></div>
         <div class="bg-slate-950 p-2.5 rounded-xl font-mono text-center text-amber-400 font-bold text-sm border border-slate-800 flex justify-between items-center">
@@ -130,16 +164,13 @@
         </div>
       </div>
 
-      <!-- Çat Mesajları -->
       <div class="flex-1 p-4 overflow-y-auto custom-scrollbar space-y-3" id="chat-messages"></div>
 
-      <!-- Satıcı Paneline Giriş Düyməsi -->
       <div class="bg-slate-950 px-4 py-2 border-t border-slate-800 flex justify-between items-center text-xs">
         <span class="text-slate-400">Məhsulun satıcısısınız?</span>
         <button onclick="toggleSellerLogin()" class="text-purple-400 font-bold underline"><i class="fa-solid fa-lock mr-1"></i> Satıcı Paneline Giriş</button>
       </div>
 
-      <!-- Satıcı İdarə Paneli (Təsdiq/İmtina) -->
       <div id="seller-action-panel" class="bg-slate-900 p-3 border-t border-slate-800 space-y-2 hidden">
         <div class="grid grid-cols-2 gap-2">
           <button onclick="sellerApprove()" class="bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold py-2.5 rounded-xl transition"><i class="fa-solid fa-check mr-1"></i> Qəbz Keçərlidir</button>
@@ -147,7 +178,6 @@
         </div>
       </div>
 
-      <!-- Alıcı Şəkil Yükləmə Bölməsi -->
       <div id="buyer-input-panel" class="p-3 bg-slate-900 border-t border-slate-800 flex items-center space-x-2">
         <input type="file" id="receipt-input" accept="image/*" class="hidden" onchange="sendReceiptMessage(event)">
         <button onclick="document.getElementById('receipt-input').click()" class="bg-purple-600 hover:bg-purple-500 text-white px-4 py-2.5 rounded-xl text-xs font-semibold w-full flex items-center justify-center space-x-1 transition">
@@ -157,13 +187,42 @@
     </div>
   </div>
 
-  <!-- BİLDİRİŞ (TOAST) -->
-  <div id="toast" class="fixed bottom-5 right-5 hidden bg-purple-600 text-white px-6 py-3 rounded-2xl shadow-2xl flex items-center space-x-3 transition z-50">
+  <!-- ADMIN / DƏSTƏK ÇATI MODALI -->
+  <div id="admin-chat-modal" class="fixed inset-0 bg-black/85 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
+    <div class="glass max-w-md w-full rounded-3xl border border-blue-500/40 overflow-hidden flex flex-col h-[550px]">
+      <div class="bg-blue-950/80 px-6 py-4 border-b border-blue-800 flex justify-between items-center">
+        <div class="flex items-center space-x-2">
+          <i class="fa-solid fa-headset text-blue-400 text-lg"></i>
+          <div>
+            <h3 class="font-bold text-white text-sm">Admin / Dəstək Xidməti</h3>
+            <p class="text-[10px] text-blue-300">Dələduzluq şikayəti və ya kömək üçün yazın</p>
+          </div>
+        </div>
+        <button onclick="toggleModal('admin-chat-modal')" class="text-slate-400 hover:text-white text-xl"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+
+      <div class="flex-1 p-4 overflow-y-auto custom-scrollbar space-y-3" id="admin-chat-messages">
+        <div class="bg-blue-900/40 border border-blue-500/30 p-3 rounded-2xl text-xs text-blue-100">
+          👋 <strong>Admin Dəstək:</strong> Salam! Hər hansı dələduzluq halı ilə qarşılaşmısınızsa və ya sualınız varsa, buradan bizə yazın. Şikayətlərə dərhal baxılır!
+        </div>
+      </div>
+
+      <form onsubmit="sendAdminMessage(event)" class="p-3 bg-slate-900 border-t border-slate-800 flex items-center space-x-2">
+        <input type="text" id="admin-msg-input" required placeholder="Mesajınızı yazın..." class="flex-1 bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-blue-500">
+        <button type="submit" class="bg-blue-600 hover:bg-blue-500 text-white px-4 py-2 rounded-xl text-xs font-bold transition">
+          <i class="fa-solid fa-paper-plane"></i>
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- TOAST BİLDİRİŞİ -->
+  <div id="toast" class="fixed bottom-5 left-5 hidden bg-purple-600 text-white px-6 py-3 rounded-2xl shadow-2xl flex items-center space-x-3 transition z-50">
     <i class="fa-solid fa-circle-check text-xl"></i>
     <span id="toast-message">Əməliyyat tamamlandı!</span>
   </div>
 
-  <!-- SİZİN UNİKAL FIREBASE KONFİQURASİYANIZ -->
+  <!-- FIREBASE KONFİQURASİYASI -->
   <script>
     const firebaseConfig = {
       apiKey: "AIzaSyAzs6jM1HbCCpuC79AyNdOvCWNuT45_5lU",
@@ -176,12 +235,11 @@
       measurementId: "G-YH4VSK6501"
     };
 
-    // Firebase-i Başlat
     firebase.initializeApp(firebaseConfig);
     const database = firebase.database();
   </script>
   
-  <!-- ƏSAS MƏNTİQ KODLARI -->
   <script src="script.js"></script>
 </body>
-</html>
+        </html>
+        
