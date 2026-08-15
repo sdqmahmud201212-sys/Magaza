@@ -1,4 +1,3 @@
-// Bütün funksiyaları qlobal səviyyədə təyin edirik ki, HTML düymələri onları rahatlıqla görə bilsin
 window.toggleModal = function(modalId) {
   const modal = document.getElementById(modalId);
   if (modal) {
@@ -34,7 +33,6 @@ window.goHome = function() {
   document.getElementById('seller-dashboard-page').classList.add('hidden');
 }
 
-// Məhsulları oxumaq
 window.loadProducts = function() {
   const productsGrid = document.getElementById('products-grid');
   const productCount = document.getElementById('product-count');
@@ -84,7 +82,6 @@ window.loadProducts = function() {
   });
 }
 
-// Material Yükləmə
 window.handlePDFUpload = function(event) {
   event.preventDefault();
   
@@ -123,7 +120,6 @@ window.handlePDFUpload = function(event) {
   }
 }
 
-// Satıcı Girişi
 window.handleSellerLogin = function(event) {
   event.preventDefault();
   const email = document.getElementById('login-email').value;
@@ -197,7 +193,6 @@ window.deleteMaterial = function(id) {
   }
 }
 
-// Alış Pəncərəsi
 window.openChat = function(id, title, author, price, card, phone) {
   document.getElementById('chat-product-title').innerText = title;
   document.getElementById('chat-seller-info').innerText = `Müəllif: ${author} | Nömrə: ${phone}`;
