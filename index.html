@@ -1,321 +1,368 @@
 <!DOCTYPE html>
-<html lang="az" class="dark">
+<html lang="az">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>PDF Satış Və Paylaşım Platforması</title>
-  
-  <!-- Tailwind CSS Və FontAwesome İkonları -->
-  <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  
-  <style>
-    body {
-      background-color: #020617;
-      color: #f8fafc;
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-    }
-    .glass {
-      background: rgba(15, 23, 42, 0.85);
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PDF və Material Satış Platforması</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body { background-color: #020617; color: #f8fafc; font-family: system-ui, sans-serif; }
+        .glass { background: rgba(15, 23, 42, 0.85); backdrop-filter: blur(16px); }
+        @keyframes slideIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        @keyframes slideOut {
+            from { transform: translateX(0); opacity: 1; }
+            to { transform: translateX(100%); opacity: 0; }
+        }
+        .toast-in { animation: slideIn 0.3s ease forwards; }
+        .toast-out { animation: slideOut 0.3s ease forwards; }
+    </style>
 </head>
 <body class="min-h-screen flex flex-col justify-between selection:bg-purple-500 selection:text-white">
 
-  <!-- TOP HEADER / NAVİQASİYA -->
-  <header class="sticky top-0 z-50 glass border-b border-slate-800">
-    <div class="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
-      
-      <!-- Logo -->
-      <div class="flex items-center space-x-2.5 cursor-pointer" onclick="goHome()">
-        <div class="w-10 h-10 bg-purple-600 rounded-2xl flex items-center justify-center shadow-lg shadow-purple-600/30 text-white font-bold text-xl shrink-0">
+  <!-- BİLDİRİŞ (TOAST) KONTEYNERİ -->
+  <div id="toast-container" class="fixed top-5 right-5 z-50 flex flex-col space-y-3 pointer-events-none"></div>
+
+  <!-- TOP HEADER -->
+  <header class="sticky top-0 z-40 glass border-b border-slate-800">
+    <div class="max-w-7xl mx-auto px-4 h-20 flex items-center justify-between">
+      <div class="flex items-center space-x-2.5">
+        <div class="w-10 h-10 bg-purple-600 rounded-2xl flex items-center justify-center text-white font-bold text-xl shadow-lg shadow-purple-600/30">
           <i class="fa-solid fa-file-pdf"></i>
         </div>
         <div>
-          <h1 class="text-base sm:text-lg font-black tracking-tight text-white leading-tight">PDF Market</h1>
-          <p class="text-[9px] sm:text-[10px] text-purple-400 font-semibold tracking-widest uppercase">Təhlükəsiz Satış</p>
+          <h1 class="text-base font-black text-white">PDF Market</h1>
+          <p class="text-[9px] text-purple-400 font-semibold tracking-widest uppercase">Canlı Baza + Panellər</p>
         </div>
       </div>
-
-      <!-- Düymələr -->
-      <div class="flex items-center space-x-1.5 sm:space-x-2">
-        <button type="button" onclick="toggleModal('rules-modal')" class="bg-slate-900 hover:bg-slate-800 text-slate-300 hover:text-white px-3 py-2.5 rounded-xl sm:rounded-2xl text-xs font-bold border border-slate-700/60 transition flex items-center space-x-1.5 cursor-pointer">
-          <i class="fa-solid fa-book-bookmark text-amber-400 text-sm"></i>
-          <span class="hidden md:inline">Qaydalar</span>
-        </button>
-
-        <button type="button" onclick="toggleModal('seller-login-modal')" class="bg-slate-900 hover:bg-slate-800 text-purple-400 hover:text-white px-3 py-2.5 rounded-xl sm:rounded-2xl text-xs font-bold border border-purple-500/40 transition flex items-center space-x-1.5 cursor-pointer">
-          <i class="fa-solid fa-user-shield text-sm"></i>
-          <span>Satıcı Paneli</span>
-        </button>
-
-        <button type="button" onclick="toggleModal('upload-modal')" class="bg-purple-600 hover:bg-purple-500 text-white px-3.5 sm:px-5 py-2.5 rounded-xl sm:rounded-2xl text-xs font-bold transition shadow-lg shadow-purple-600/30 flex items-center space-x-1.5 cursor-pointer">
-          <i class="fa-solid fa-plus text-sm"></i>
+      <div class="flex items-center space-x-3">
+        <button onclick="openModal()" class="bg-purple-600 hover:bg-purple-500 text-white px-4 py-2.5 rounded-2xl text-xs font-bold shadow-lg shadow-purple-600/30 transition cursor-pointer flex items-center space-x-1.5">
+          <i class="fa-solid fa-plus"></i>
           <span>Material Yüklə</span>
         </button>
       </div>
-
     </div>
   </header>
 
-  <!-- ƏSAS MENYU VƏ ANA SƏHİFƏ -->
-  <main id="main-content" class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-6">
-
-    <!-- Tünd Qırmızı Fondan Vahiməli Hüquqi Xəbərdarlıq Banneri -->
-    <div class="bg-red-950/80 border-2 border-red-600/70 backdrop-blur-md rounded-3xl p-5 sm:p-6 flex flex-col md:flex-row items-start md:items-center justify-between gap-4 shadow-2xl shadow-red-950/50">
-      <div class="flex items-start sm:items-center space-x-4">
-        <div class="w-12 h-12 bg-red-600/30 text-red-400 rounded-2xl flex items-center justify-center border border-red-500/40 shrink-0 text-2xl">
-          <i class="fa-solid fa-triangle-exclamation animate-pulse"></i>
-        </div>
-        <div class="space-y-1">
-          <h4 class="text-sm sm:text-base font-black text-red-200 tracking-tight leading-snug">
-            ⚠️ RƏSMİ HÜQUQİ XƏBƏRDARLIQ VƏ CİDDİ MƏSULİYYƏT BİLDİRİŞİ!
-          </h4>
-          <p class="text-xs text-red-300 font-semibold leading-relaxed">
-            DİQQƏT! BU QAYDALARIN POZULMASI AĞIR HÜQUQİ NƏTİCƏLƏR VƏ CİNAYƏT MƏSULİYYƏTİ TƏDBİRLƏRİLƏ NƏTİCƏLƏNƏCƏK!
-          </p>
-        </div>
-      </div>
-      <button type="button" onclick="toggleModal('legal-warning-modal')" class="w-full md:w-auto bg-red-600 hover:bg-red-700 text-white px-5 py-2.5 rounded-xl text-xs font-black uppercase tracking-wider transition text-center cursor-pointer shadow-lg shadow-red-600/40 shrink-0">
-        Ətraflı Oxu
-      </button>
-    </div>
-
-    <!-- Xəbərdarlıq Bannerləri -->
-    <div class="bg-purple-950/40 border border-purple-500/30 backdrop-blur-md rounded-3xl p-4 sm:p-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 shadow-xl">
-      <div class="flex items-center space-x-4">
-        <div class="w-12 h-12 bg-purple-600/20 text-purple-400 rounded-2xl flex items-center justify-center border border-purple-500/30 shrink-0 text-xl">
-          <i class="fa-solid fa-shield-halved"></i>
-        </div>
-        <div>
-          <h4 class="text-sm sm:text-base font-bold text-white flex flex-wrap items-center gap-2">
-            <span>Müəllif hüquqları qorunur, bir fayl ikinci dəfə paylaşıla bilmir</span>
-            <span class="bg-emerald-500/20 text-emerald-400 text-[10px] px-2.5 py-0.5 rounded-full border border-emerald-500/30 font-semibold">Sistem Aktivdir</span>
-          </h4>
-          <p class="text-xs text-slate-300 mt-1">
-            Baza tərəfindən təkrar fayl yüklənmələri avtomatik bloklanır.
-          </p>
-        </div>
-      </div>
-      <button type="button" onclick="toggleModal('rules-modal')" class="w-full sm:w-auto bg-purple-600/20 hover:bg-purple-600 text-purple-300 hover:text-white px-4 py-2 rounded-xl text-xs font-semibold border border-purple-500/40 transition text-center cursor-pointer">
-        Qaydaları Oxu
-      </button>
-    </div>
-
-    <!-- Başlıq və Sayğac -->
-    <div class="flex items-center justify-between pt-2">
+  <!-- MAIN CONTENT -->
+  <main class="flex-1 max-w-7xl w-full mx-auto px-4 py-8 space-y-6">
+    <div class="flex items-center justify-between">
       <div>
-        <h2 class="text-2xl font-black text-white tracking-tight">Satışdakı Materiallar</h2>
-        <p class="text-xs text-slate-400 mt-1">Bütün PDF-lər birbaşa müəlliflər tərəfindən yerləşdirilir.</p>
+        <h2 class="text-2xl font-black text-white">Satışdakı Materiallar</h2>
+        <p class="text-xs text-slate-400 mt-1">Bütün istifadəçilər üçün ortaq onlayn baza.</p>
       </div>
       <span id="product-count" class="bg-slate-900 border border-slate-800 text-purple-400 text-xs font-bold px-4 py-2 rounded-2xl">0 material</span>
     </div>
 
-    <!-- Məhsullar Grid -->
+    <!-- Məhsullar Şəbəkəsi -->
     <div id="products-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-      <!-- Dinamik yüklənir -->
-    </div>
-
-  </main>
-
-  <!-- SATICI KABİNETİ SƏHİFƏSİ (Gizli başlayır) -->
-  <main id="seller-dashboard-page" class="flex-1 max-w-5xl w-full mx-auto px-4 py-8 space-y-6 hidden">
-    <div class="bg-slate-900 border border-slate-800 rounded-3xl p-6 shadow-2xl space-y-6">
-      <div class="flex items-center justify-between border-b border-slate-800 pb-4">
-        <div>
-          <h2 class="text-xl font-bold text-white">Satıcı Kabineti</h2>
-          <p id="seller-logged-email" class="text-xs text-purple-400 mt-0.5">Giriş edən: -</p>
-        </div>
-        <button onclick="sellerLogout()" class="bg-rose-600/20 hover:bg-rose-600 text-rose-300 hover:text-white px-4 py-2 rounded-xl text-xs font-bold border border-rose-500/30 transition cursor-pointer">
-          Çıxış Et
-        </button>
-      </div>
-
-      <div>
-        <h3 class="text-sm font-bold text-white mb-3">Mənim Satışa Çixardığım Materiallarım</h3>
-        <div id="seller-products-grid" class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <!-- Satıcının öz məhsulları -->
-        </div>
-      </div>
+      <div class="col-span-full text-center py-12 text-slate-500 text-xs">Bazadan məlumatlar yüklənir...</div>
     </div>
   </main>
 
-  <!-- FOOTER -->
-  <footer class="border-t border-slate-800 py-6 text-center text-xs text-slate-500">
-    <p>© 2026 PDF Market. Bütün hüquqlar qorunur.</p>
-  </footer>
-
-  <!-- MODAL: HÜQUQİ XƏBƏRDARLIQ DETALLARI -->
-  <div id="legal-warning-modal" class="fixed inset-0 bg-slate-950/90 backdrop-blur-md flex items-center justify-center p-4 z-50 hidden">
-    <div class="bg-slate-900 border-2 border-red-600/60 w-full max-w-2xl rounded-3xl p-6 relative shadow-2xl space-y-4 max-h-[85vh] flex flex-col">
-      <div class="flex items-center justify-between border-b border-slate-800 pb-3">
-        <h3 class="text-sm sm:text-base font-black text-red-400 flex items-center space-x-2">
-          <i class="fa-solid fa-triangle-exclamation"></i>
-          <span>RƏSMİ HÜQUQİ VƏ CİNAYƏT MƏSULİYYƏTİ BİLDİRİŞİ</span>
-        </h3>
-        <button type="button" onclick="toggleModal('legal-warning-modal')" class="text-slate-400 hover:text-white text-lg cursor-pointer">
-          <i class="fa-solid fa-xmark"></i>
-        </button>
-      </div>
-
-      <div class="flex-1 overflow-y-auto space-y-3 text-xs text-slate-300 pr-2 leading-relaxed">
-        <div class="bg-red-950/40 border border-red-900/50 p-4 rounded-2xl space-y-1.5">
-          <h4 class="font-bold text-red-400">1. Unikal İdentifikasiya və Qəti Bloklama</h4>
-          <p>Sistemimiz hər bir faylın rəqəmsal imzasını (hash) avtomatik olaraq qeydə alır. Başqasına məxsus PDF faylını, kitabını və ya əməyini oğurlayıb öz adı ilə təkrar satışa çıxarmağa cəhd edən şəxslərin <strong>bütün hesabları dərhal və geri dönüşsüz olaraq silinəcək, İP ünvanları qara siyahıya (blacklist) salınacaqdır.</strong></p>
-        </div>
-        <div class="bg-red-950/40 border border-red-900/50 p-4 rounded-2xl space-y-1.5">
-          <h4 class="font-bold text-red-400">2. Müəllif Hüquqlarının Pozulması (Kriminal Məsuliyyət)</h4>
-          <p>Azərbaycan Respublikasının Müəllif Hüquqları və Əlaqəli Hüquqlar haqqında Qanunvericiliyinə, eləcə də Cinayət Məcəlləsinin müvafiq maddələrinə əsasən, intellektual mülkiyyətin qanunsuz yayılması, piratçılıq və oğurluq materialların kommersiya məqsədilə satışı <strong>ağır cərimələr və ya azadlıqdan məhrumetmə cəzası</strong> ilə cəzalandırılır.</p>
-        </div>
-        <div class="bg-red-950/40 border border-red-900/50 p-4 rounded-2xl space-y-1.5">
-          <h4 class="font-bold text-red-400">3. Məlumatların Birbaşa Təqib Edilməsi</h4>
-          <p>Hər bir satıcının daxil etdiyi Gmail, şifrə, telefon nömrəsi və kart məlumatları şifrələnmiş şəkildə qorunur və hər hansı qanunsuzluq (dələduzluq, saxta qəbz, başqasının əməyini mənimsəmə) aşkarlandığı an <strong>bütün şəxsi məlumatlarınız hüquq-mühafizə orqanlarına (Polisə və Kibertəhlükəsizlik Xidmətinə) birbaşa təqdim olunacaqdır.</strong></p>
-        </div>
-        <div class="bg-red-950/40 border border-red-900/50 p-4 rounded-2xl space-y-1.5">
-          <h4 class="font-bold text-red-400">4. Məsuliyyət İmtinası</h4>
-          <p>Platforma yalnız vasitəçidir. Saxtakarılıq edən, alıcını aldatmağa çalışan və ya başqasının faylını oğurlayan hər kəs törətdiyi əmələ görə <strong>şəxsən və tam hüquqi məsuliyyət daşıyır</strong>.</p>
-        </div>
-      </div>
-
-      <button type="button" onclick="toggleModal('legal-warning-modal')" class="w-full bg-red-600 hover:bg-red-700 text-white font-black py-3 rounded-2xl text-xs transition cursor-pointer uppercase tracking-wider">
-        Anladım və Qəbul Edirəm
-      </button>
-    </div>
-  </div>
-
-  <!-- MODAL: QAYDALAR VƏ TƏLİMATLAR -->
-  <div id="rules-modal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-4 z-50 hidden">
-    <div class="bg-slate-900 border border-slate-800 w-full max-w-2xl rounded-3xl p-6 relative shadow-2xl space-y-4 max-h-[85vh] flex flex-col">
-      <div class="flex items-center justify-between border-b border-slate-800 pb-3">
-        <h3 class="text-base font-bold text-white flex items-center space-x-2">
-          <i class="fa-solid fa-book-bookmark text-amber-400"></i>
-          <span>Sifariş Qaydaları və Təlimatlar</span>
-        </h3>
-        <button type="button" onclick="toggleModal('rules-modal')" class="text-slate-400 hover:text-white text-lg cursor-pointer">
-          <i class="fa-solid fa-xmark"></i>
-        </button>
-      </div>
-
-      <div class="flex-1 overflow-y-auto space-y-3 text-xs text-slate-300 pr-2 leading-relaxed">
-        <div class="bg-slate-950 border border-slate-800 p-4 rounded-2xl space-y-1.5">
-          <h4 class="font-bold text-purple-400">1. Sifariş Vermək Addımları</h4>
-          <p>Bəyəndiyiniz materialın üzərinə klikləyin, açılan pəncərədə satıcının kart nömrəsini kopyalayıb ödənişi edin, daha sonra ödəniş qəbzinin şəklini sistemə yükləyin.</p>
-        </div>
-        <div class="bg-slate-950 border border-slate-800 p-4 rounded-2xl space-y-1.5">
-          <h4 class="font-bold text-amber-400">2. Cavab Gəlmədikdə Nə Etməli?</h4>
-          <p>Satıcı online olub-olmamasını yoxlayın. <strong>3-4 saat içində cavab gəlməzsə nömrəyə yazın</strong> (Satıcının nömrəsi məhsul pəncərəsində və ya çatda göstərilir).</p>
-        </div>
-        <div class="bg-slate-950 border border-slate-800 p-4 rounded-2xl space-y-1.5">
-          <h4 class="font-bold text-emerald-400">3. Gmail Bildirişləri</h4>
-          <p>Alıcı alış etmək istədikdə satıcının qeyd etdiyi Gmail ünvanına avtomatik bildiriş mesajı gedir.</p>
-        </div>
-      </div>
-
-      <button type="button" onclick="toggleModal('rules-modal')" class="w-full bg-slate-800 hover:bg-slate-700 text-white font-bold py-3 rounded-2xl text-xs transition cursor-pointer">
-        Anladım
-      </button>
-    </div>
-  </div>
-
-  <!-- MODAL: SATICI GİRİŞİ VƏ QEYDİYYATI -->
-  <div id="seller-login-modal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-4 z-50 hidden">
-    <div class="bg-slate-900 border border-slate-800 w-full max-w-md rounded-3xl p-6 relative shadow-2xl space-y-4">
-      <button type="button" onclick="toggleModal('seller-login-modal')" class="absolute top-4 right-4 text-slate-400 hover:text-white text-lg cursor-pointer">
-        <i class="fa-solid fa-xmark"></i>
-      </button>
-
-      <h3 class="text-lg font-bold text-white flex items-center space-x-2">
-        <i class="fa-solid fa-user-shield text-purple-500"></i>
-        <span>Satıcı Kabinetinə Giriş</span>
-      </h3>
-      <p class="text-xs text-slate-400">Material yükləyərkən təyin etdiyiniz Gmail və şifrənizi daxil edin.</p>
-
-      <form onsubmit="handleSellerLogin(event)" class="space-y-3">
-        <div>
-          <label class="block text-xs font-semibold text-slate-400 mb-1">Gmail Adresiniz</label>
-          <input type="email" id="login-email" required placeholder="satici@gmail.com" class="w-full bg-slate-950 border border-slate-800 rounded-2xl px-4 py-3 text-xs text-white focus:outline-none focus:border-purple-500">
-        </div>
-        <div>
-          <label class="block text-xs font-semibold text-slate-400 mb-1">Şifrə</label>
-          <input type="password" id="login-password" required placeholder="Şifrəniz" class="w-full bg-slate-950 border border-slate-800 rounded-2xl px-4 py-3 text-xs text-white focus:outline-none focus:border-purple-500">
-        </div>
-        <button type="submit" class="w-full bg-purple-600 hover:bg-purple-500 text-white font-bold py-3 rounded-2xl text-xs transition shadow-lg shadow-purple-600/30 cursor-pointer">
-          Kabinetə Daxil Ol
-        </button>
-      </form>
-    </div>
-  </div>
-
-  <!-- MODAL: MƏHSUL YÜKLƏMƏ PƏNCƏRƏSİ -->
+  <!-- MODAL: YÜKLƏMƏ VƏ TƏSVİR (DESCRIPTION) MƏLUMATLARI -->
   <div id="upload-modal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-4 z-50 hidden">
     <div class="bg-slate-900 border border-slate-800 w-full max-w-lg rounded-3xl p-6 relative shadow-2xl space-y-4 max-h-[90vh] overflow-y-auto">
-      <button type="button" onclick="toggleModal('upload-modal')" class="absolute top-4 right-4 text-slate-400 hover:text-white text-lg cursor-pointer">
+      <button onclick="closeModal()" class="absolute top-4 right-4 text-slate-400 hover:text-white text-lg cursor-pointer">
         <i class="fa-solid fa-xmark"></i>
       </button>
 
       <h3 class="text-lg font-bold text-white flex items-center space-x-2">
         <i class="fa-solid fa-cloud-arrow-up text-purple-500"></i>
-        <span>Yeni PDF Material Əlavə Et</span>
+        <span>Yeni Material Əlavə Et</span>
       </h3>
 
-      <form onsubmit="handlePDFUpload(event)" class="space-y-3">
+      <div class="space-y-3">
         <div>
           <label class="block text-xs font-semibold text-slate-400 mb-1">Materialın Başlığı</label>
-          <input type="text" id="pdf-title" required placeholder="Məs: İngilis Dili Qrammatika" class="w-full bg-slate-950 border border-slate-800 rounded-2xl px-4 py-3 text-xs text-white focus:outline-none focus:border-purple-500">
+          <input type="text" id="pdf-title" placeholder="Məs: Riyaziyyat PDF" class="w-full bg-slate-950 border border-slate-800 rounded-2xl px-4 py-3 text-xs text-white focus:outline-none focus:border-purple-500">
         </div>
-
         <div>
-          <label class="block text-xs font-semibold text-slate-400 mb-1">Açıqlama (Description) <span class="text-rose-500">*Məcburidir</span></label>
-          <textarea id="pdf-desc" required rows="3" placeholder="Material haqqında ətraflı məlumat yazın..." class="w-full bg-slate-950 border border-slate-800 rounded-2xl px-4 py-3 text-xs text-white focus:outline-none focus:border-purple-500"></textarea>
+          <label class="block text-xs font-semibold text-slate-400 mb-1">Təsvir (Description)</label>
+          <textarea id="pdf-desc" rows="2" placeholder="Material haqqında qısa məlumat..." class="w-full bg-slate-950 border border-slate-800 rounded-2xl px-4 py-3 text-xs text-white focus:outline-none focus:border-purple-500"></textarea>
         </div>
-
-        <div class="grid grid-cols-2 gap-3">
-          <div>
-            <label class="block text-xs font-semibold text-slate-400 mb-1">Müəllif Adı</label>
-            <input type="text" id="pdf-author" required placeholder="Adınız Soyadınız" class="w-full bg-slate-950 border border-slate-800 rounded-2xl px-4 py-3 text-xs text-white focus:outline-none focus:border-purple-500">
-          </div>
-          <div>
-            <label class="block text-xs font-semibold text-slate-400 mb-1">Qiymət (AZN)</label>
-            <input type="number" step="0.1" id="pdf-price" required placeholder="Məs: 9" class="w-full bg-slate-950 border border-slate-800 rounded-2xl px-4 py-3 text-xs text-white focus:outline-none focus:border-purple-500">
-          </div>
-        </div>
-
-        <div class="grid grid-cols-2 gap-3">
-          <div>
-            <label class="block text-xs font-semibold text-slate-400 mb-1">Əlaqə Nömrəniz</label>
-            <input type="text" id="seller-phone" required placeholder="Məs: 0501234567" class="w-full bg-slate-950 border border-slate-800 rounded-2xl px-4 py-3 text-xs text-white focus:outline-none focus:border-purple-500">
-          </div>
-          <div>
-            <label class="block text-xs font-semibold text-slate-400 mb-1">Kart Nömrəsi</label>
-            <input type="text" id="seller-card" required placeholder="16 rəqəmli kart" class="w-full bg-slate-950 border border-slate-800 rounded-2xl px-4 py-3 text-xs text-white focus:outline-none focus:border-purple-500 font-mono">
-          </div>
-        </div>
-
-        <div class="grid grid-cols-2 gap-3">
-          <div>
-            <label class="block text-xs font-semibold text-slate-400 mb-1">Gmail Adresiniz</label>
-            <input type="email" id="seller-email" required placeholder="ornek@gmail.com" class="w-full bg-slate-950 border border-slate-800 rounded-2xl px-4 py-3 text-xs text-white focus:outline-none focus:border-purple-500">
-          </div>
-          <div>
-            <label class="block text-xs font-semibold text-slate-400 mb-1">Şifrə Təyin Edin</label>
-            <input type="password" id="seller-password" required placeholder="Şifrə" class="w-full bg-slate-950 border border-slate-800 rounded-2xl px-4 py-3 text-xs text-white focus:outline-none focus:border-purple-500">
-          </div>
-        </div>
-
         <div>
-          <label class="block text-xs font-semibold text-slate-400 mb-1">PDF Faylı Yüklə</label>
-          <input type="file" id="pdf-file" accept="application/pdf" required class="w-full text-xs text-slate-400 file:mr-4 file:py-2.5 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-purple-600 file:text-white hover:file:bg-purple-500 cursor-pointer">
+          <label class="block text-xs font-semibold text-slate-400 mb-1">Qiymət (AZN)</label>
+          <input type="number" id="pdf-price" placeholder="Məs: 5" class="w-full bg-slate-950 border border-slate-800 rounded-2xl px-4 py-3 text-xs text-white focus:outline-none focus:border-purple-500">
         </div>
-
-        <button type="submit" class="w-full bg-purple-600 hover:bg-purple-500 text-white font-bold py-3 rounded-2xl text-xs transition shadow-lg shadow-purple-600/30 cursor-pointer">
-          Satışa Çıxar
+        <div>
+          <label class="block text-xs font-semibold text-slate-400 mb-1">Satıcının Adı</label>
+          <input type="text" id="seller-name" placeholder="Məs: Elvin Məmmədov" class="w-full bg-slate-950 border border-slate-800 rounded-2xl px-4 py-3 text-xs text-white focus:outline-none focus:border-purple-500">
+        </div>
+        <div>
+          <label class="block text-xs font-semibold text-slate-400 mb-1">Telefon Nömrəsi</label>
+          <input type="text" id="seller-phone" placeholder="Məs: +994501234567" class="w-full bg-slate-950 border border-slate-800 rounded-2xl px-4 py-3 text-xs text-white focus:outline-none focus:border-purple-500">
+        </div>
+        <div>
+          <label class="block text-xs font-semibold text-slate-400 mb-1">E-poçt ünvanı</label>
+          <input type="email" id="seller-email" placeholder="Məs: example@mail.com" class="w-full bg-slate-950 border border-slate-800 rounded-2xl px-4 py-3 text-xs text-white focus:outline-none focus:border-purple-500">
+        </div>
+        <button onclick="uploadProduct()" class="w-full bg-purple-600 hover:bg-purple-500 text-white font-bold py-3 rounded-2xl text-xs transition shadow-lg shadow-purple-600/30 cursor-pointer">
+          Bazaya Göndər (Hamıda Görünsün)
         </button>
-      </form>
+      </div>
     </div>
   </div>
 
-  <!-- MODAL: ÇAT VƏ ALINMA PƏNCƏRƏSİ -->
+  <!-- MODAL: SİLİNMƏ VƏ ADMIN ÜÇÜN 5 RƏQƏMLİ KOD PANELİ -->
+  <div id="delete-modal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-4 z-50 hidden">
+    <div class="bg-slate-900 border border-slate-800 w-full max-w-sm rounded-3xl p-6 relative shadow-2xl space-y-4 text-center">
+      <button onclick="closeDeleteModal()" class="absolute top-4 right-4 text-slate-400 hover:text-white text-lg cursor-pointer">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+
+      <div class="w-12 h-12 bg-rose-600/20 border border-rose-500/30 text-rose-400 rounded-2xl flex items-center justify-center mx-auto text-xl">
+        <i class="fa-solid fa-lock"></i>
+      </div>
+
+      <h3 class="text-base font-bold text-white">Admin Təsdiqi Tələb Olunur</h3>
+      <p class="text-xs text-slate-400">Materialı silmək üçün 5 rəqəmli təhlükəsizlik kodunu daxil edin:</p>
+      
+      <div id="hint-code-box" class="bg-slate-950 border border-purple-500/30 text-purple-400 font-mono font-bold text-sm py-1.5 rounded-xl tracking-widest">
+        Kod: Yüklənir...
+      </div>
+
+      <input type="password" id="admin-code-input" maxlength="5" placeholder="*****" class="w-full bg-slate-950 border border-slate-800 rounded-2xl px-4 py-3 text-center text-lg tracking-widest text-white focus:outline-none focus:border-purple-500">
+
+      <button onclick="verifyAndDelete()" class="w-full bg-rose-600 hover:bg-rose-500 text-white font-bold py-3 rounded-2xl text-xs transition shadow-lg shadow-rose-600/30 cursor-pointer">
+        Kodu Təsdiqlə və Sil
+      </button>
+    </div>
+  </div>
+
+  <!-- MODAL: ÇAT VƏ ƏLAQƏ PANELİ -->
   <div id="chat-modal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-4 z-50 hidden">
-    <div class="bg-slate-900 border border-slate-800 w-full max-w-xl rounded-3xl p-6 relativ
+    <div class="bg-slate-900 border border-slate-800 w-full max-w-md rounded-3xl p-6 relative shadow-2xl space-y-4">
+      <button onclick="closeChatModal()" class="absolute top-4 right-4 text-slate-400 hover:text-white text-lg cursor-pointer">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+
+      <h3 class="text-base font-bold text-white flex items-center space-x-2">
+        <i class="fa-solid fa-comments text-purple-500"></i>
+        <span>Satıcı ilə Əlaqə / Çat</span>
+      </h3>
+
+      <div class="bg-slate-950 border border-slate-800 rounded-2xl p-4 space-y-2 text-xs">
+        <p class="text-slate-400">Satıcı: <span id="chat-seller-name" class="text-white font-bold"></span></p>
+        <p class="text-slate-400">Telefon: <span id="chat-seller-phone" class="text-white font-bold"></span></p>
+        <p class="text-slate-400">E-poçt: <span id="chat-seller-email" class="text-white font-bold"></span></p>
+      </div>
+
+      <div class="space-y-2">
+        <label class="block text-xs font-semibold text-slate-400">Satıcıya Mesaj Göndər</label>
+        <textarea id="chat-message" rows="3" placeholder="Sualınızı yazın..." class="w-full bg-slate-950 border border-slate-800 rounded-2xl p-3 text-xs text-white focus:outline-none focus:border-purple-500"></textarea>
+        <button onclick="sendChatMessage()" class="w-full bg-purple-600 hover:bg-purple-500 text-white font-bold py-2.5 rounded-2xl text-xs transition cursor-pointer">
+          Mesajı Göndər
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- HÜQUQİ XƏBƏRDARLIQ VƏ POLİS NƏZARƏTİ HİSSƏSİ (FOOTER) -->
+  <footer class="border-t border-slate-800 bg-slate-950 py-8 mt-12 text-slate-400 text-xs">
+    <div class="max-w-7xl mx-auto px-4 space-y-4 text-center sm:text-left flex flex-col sm:flex-row items-center justify-between">
+      
+      <div class="space-y-1 max-w-xl">
+        <div class="flex items-center justify-center sm:justify-start space-x-2 text-rose-400 font-bold">
+          <i class="fa-solid fa-shield-halved"></i>
+          <span>Rəsmi Hüquqi Xəbərdarlıq və Nəzarət</span>
+        </div>
+        <p class="text-[11px] leading-relaxed text-slate-500">
+          Bu platforma üzərindən həyata keçirilən bütün əməliyyatlar və maliyyə köçürmələri kibertəhlükəsizlik və hüquq-mühafizə orqanları tərəfindən izlənilir. Hər hansı bir dələduzluq, saxtakarlıq, xırda talama (Azərbaycan Respublikası İnzibati Xətalar və Cinayət Məcəlləsinin müvafiq maddələri) və ya qanunsuz fəaliyyət aşkar olunduqda, dərhal hüquq-mühafizə orqanlarına məlumat veriləcək və hüquqi məsuliyyətə cəlb olunacaqsınız.
+        </p>
+      </div>
+
+      <div class="text-center sm:text-right text-[11px] text-slate-600 space-y-1">
+        <p>© 2026 PDF Market</p>
+        <p class="text-purple-400 font-semibold">Bütün hüquqlar qorunur.</p>
+      </div>
+
+    </div>
+  </footer>
+
+  <!-- SCRIPT -->
+  <script>
+    const DATABASE_URL = "https://magaza-f54b4-default-rtdb.europe-west1.firebasedatabase.app";
+    
+    let currentRandomCode = String(Math.floor(10000 + Math.random() * 90000));
+    let itemKeyToDelete = null;
+
+    document.addEventListener("DOMContentLoaded", () => {
+      fetchProducts();
+      setInterval(fetchProducts, 3000);
+      document.getElementById('hint-code-box').innerText = `Admin Kod: ${currentRandomCode}`;
+    });
+
+    function showToast(message, type = 'success') {
+      const container = document.getElementById('toast-container');
+      const toast = document.createElement('div');
+      
+      let bgColor = type === 'success' ? 'bg-emerald-600' : (type === 'error' ? 'bg-rose-600' : 'bg-purple-600');
+      let icon = type === 'success' ? 'fa-circle-check' : (type === 'error' ? 'fa-circle-exclamation' : 'fa-circle-info');
+
+      toast.className = `pointer-events-auto flex items-center space-x-2 text-white px-4 py-3 rounded-2xl shadow-xl text-xs font-bold ${bgColor} toast-in`;
+      toast.innerHTML = `<i class="fa-solid ${icon} text-sm"></i><span>${message}</span>`;
+      
+      container.appendChild(toast);
+
+      setTimeout(() => {
+        toast.classList.remove('toast-in');
+        toast.classList.add('toast-out');
+        setTimeout(() => toast.remove(), 300);
+      }, 3000);
+    }
+
+    function openModal() {
+      document.getElementById('upload-modal').classList.remove('hidden');
+    }
+
+    function closeModal() {
+      document.getElementById('upload-modal').classList.add('hidden');
+    }
+
+    function closeDeleteModal() {
+      document.getElementById('delete-modal').classList.add('hidden');
+      itemKeyToDelete = null;
+    }
+
+    function closeChatModal() {
+      document.getElementById('chat-modal').classList.add('hidden');
+    }
+
+    async function fetchProducts() {
+      const grid = document.getElementById('products-grid');
+      const countLabel = document.getElementById('product-count');
+
+      try {
+        const response = await fetch(`${DATABASE_URL}/materials.json`);
+        const data = await response.json();
+
+        grid.innerHTML = '';
+        if (data) {
+          let count = 0;
+          Object.keys(data).forEach(key => {
+            const item = data[key];
+            count++;
+            grid.innerHTML += `
+              <div class="bg-slate-900 border border-slate-800 rounded-3xl p-5 flex flex-col justify-between shadow-xl space-y-4">
+                <div>
+                  <div class="flex items-center justify-between mb-2">
+                    <span class="bg-purple-600/20 text-purple-400 text-[10px] font-bold px-3 py-1 rounded-full border border-purple-500/30">PDF Fayl</span>
+                    <span class="text-emerald-400 font-bold text-sm">${item.price} AZN</span>
+                  </div>
+                  <h3 class="text-base font-bold text-white mb-1">${item.title}</h3>
+                  <p class="text-xs text-slate-400 mb-2">${item.desc || 'Təsvir yoxdur.'}</p>
+                  <p class="text-xs text-slate-400">Satıcı: <span class="text-slate-200 font-semibold">${item.sellerName || 'Naməlum'}</span></p>
+                </div>
+                
+                <div class="flex items-center space-x-2">
+                  <button onclick="openChat('${item.sellerName || 'Naməlum'}', '${item.sellerPhone || 'Yoxdur'}', '${item.sellerEmail || 'Yoxdur'}')" class="flex-1 bg-slate-800 hover:bg-slate-700 text-purple-300 font-bold py-2 rounded-xl text-xs transition cursor-pointer flex items-center justify-center space-x-1.5">
+                    <i class="fa-solid fa-comment-dots"></i>
+                    <span>Çat</span>
+                  </button>
+                  <button onclick="promptDelete('${key}')" class="bg-rose-600/20 hover:bg-rose-600 text-rose-300 hover:text-white font-bold px-4 py-2 rounded-xl text-xs transition cursor-pointer">
+                    Sil
+                  </button>
+                </div>
+              </div>
+            `;
+          });
+          countLabel.innerText = `${count} material`;
+        } else {
+          grid.innerHTML = `<div class="col-span-full text-center py-12 text-slate-500 text-xs">Hələ ki, bazada heç bir material yoxdur.</div>`;
+          countLabel.innerText = `0 material`;
+        }
+      } catch (e) {
+        console.error(e);
+      }
+    }
+
+    async function uploadProduct() {
+      const title = document.getElementById('pdf-title').value.trim();
+      const desc = document.getElementById('pdf-desc').value.trim();
+      const price = document.getElementById('pdf-price').value.trim();
+      const sellerName = document.getElementById('seller-name').value.trim();
+      const sellerPhone = document.getElementById('seller-phone').value.trim();
+      const sellerEmail = document.getElementById('seller-email').value.trim();
+
+      if (!title || !desc || !price || !sellerName || !sellerPhone || !sellerEmail) {
+        showToast("Zəhmət olmasa bütün xanaları doldurun!", "error");
+        return;
+      }
+
+      const newMaterial = { title, desc, price, sellerName, sellerPhone, sellerEmail };
+
+      try {
+        await fetch(`${DATABASE_URL}/materials.json`, {
+          method: 'POST',
+          body: JSON.stringify(newMaterial),
+          headers: { 'Content-Type': 'application/json' }
+        });
+
+        document.getElementById('pdf-title').value = '';
+        document.getElementById('pdf-desc').value = '';
+        document.getElementById('pdf-price').value = '';
+        document.getElementById('seller-name').value = '';
+        document.getElementById('seller-phone').value = '';
+        document.getElementById('seller-email').value = '';
+        closeModal();
+        fetchProducts();
+        showToast("Material uğurla bazaya əlavə olundu!", "success");
+      } catch (e) {
+        showToast("Xəta baş verdi, əlavə olunmadı!", "error");
+      }
+    }
+
+    function promptDelete(key) {
+      itemKeyToDelete = key;
+      currentRandomCode = String(Math.floor(10000 + Math.random() * 90000));
+      document.getElementById('hint-code-box').innerText = `Admin Kod: ${currentRandomCode}`;
+      document.getElementById('admin-code-input').value = '';
+      document.getElementById('delete-modal').classList.remove('hidden');
+    }
+
+    async function verifyAndDelete() {
+      const enteredCode = document.getElementById('admin-code-input').value.trim();
+
+      if (enteredCode !== currentRandomCode) {
+        showToast("Daxil etdiyiniz 5 rəqəmli kod səhvdir!", "error");
+        return;
+      }
+
+      if (itemKeyToDelete) {
+        try {
+          await fetch(`${DATABASE_URL}/materials/${itemKeyToDelete}.json`, {
+            method: 'DELETE'
+          });
+          closeDeleteModal();
+          fetchProducts();
+          showToast("Material bazadan silindi!", "success");
+        } catch (e) {
+          showToast("Silinmə zamanı xəta oldu!", "error");
+        }
+      }
+    }
+
+    function openChat(name, phone, email) {
+      document.getElementById('chat-seller-name').innerText = name;
+      document.getElementById('chat-seller-phone').innerText = phone;
+      document.getElementById('chat-seller-email').innerText = email;
+      document.getElementById('chat-message').value = '';
+      document.getElementById('chat-modal').classList.remove('hidden');
+    }
+
+    function sendChatMessage() {
+      const msg = document.getElementById('chat-message').value.trim();
+      if (!msg) {
+        showToast("Zəhmət olmasa mesajınızı yazın!", "error");
+        return;
+      }
+      closeChatModal();
+      showToast("Mesaj satıcıya göndərildi!", "success");
+    }
+  </script>
+</body>
+</html>
