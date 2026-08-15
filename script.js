@@ -1,18 +1,19 @@
-function toggleModal(modalId) {
+// Bütün funksiyaları qlobal səviyyədə təyin edirik ki, HTML düymələri onları rahatlıqla görə bilsin
+window.toggleModal = function(modalId) {
   const modal = document.getElementById(modalId);
   if (modal) {
     modal.classList.toggle('hidden');
   }
 }
 
-function copyCard() {
+window.copyCard = function() {
   const cardText = document.getElementById('chat-card-number').innerText;
   navigator.clipboard.writeText(cardText).then(() => {
     showToast('Kart nömrəsi kopyalandı!');
   });
 }
 
-function showToast(message) {
+window.showToast = function(message) {
   const toast = document.getElementById('toast');
   const toastMsg = document.getElementById('toast-message');
   if (toast && toastMsg) {
@@ -28,13 +29,13 @@ document.addEventListener('DOMContentLoaded', () => {
   loadProducts();
 });
 
-function goHome() {
+window.goHome = function() {
   document.getElementById('main-content').classList.remove('hidden');
   document.getElementById('seller-dashboard-page').classList.add('hidden');
 }
 
-// Məhsulları oxumaq (Description və Nömrə ilə)
-function loadProducts() {
+// Məhsulları oxumaq
+window.loadProducts = function() {
   const productsGrid = document.getElementById('products-grid');
   const productCount = document.getElementById('product-count');
   
@@ -83,8 +84,8 @@ function loadProducts() {
   });
 }
 
-// Material Yükləmə (Description, Telefon, Gmail və Şifrə ilə)
-function handlePDFUpload(event) {
+// Material Yükləmə
+window.handlePDFUpload = function(event) {
   event.preventDefault();
   
   const title = document.getElementById('pdf-title').value;
@@ -122,8 +123,8 @@ function handlePDFUpload(event) {
   }
 }
 
-// Satıcı Girişi və Öz Səhifəsinə Keçid
-function handleSellerLogin(event) {
+// Satıcı Girişi
+window.handleSellerLogin = function(event) {
   event.preventDefault();
   const email = document.getElementById('login-email').value;
   const password = document.getElementById('login-password').value;
@@ -154,7 +155,7 @@ function handleSellerLogin(event) {
   });
 }
 
-function openSellerDashboard(email, materials) {
+window.openSellerDashboard = function(email, materials) {
   document.getElementById('main-content').classList.add('hidden');
   document.getElementById('seller-dashboard-page').classList.remove('hidden');
   document.getElementById('seller-logged-email').innerText = `Giriş edən Gmail: ${email}`;
@@ -182,12 +183,12 @@ function openSellerDashboard(email, materials) {
   }
 }
 
-function sellerLogout() {
+window.sellerLogout = function() {
   goHome();
   showToast('Sistemdən çıxış edildi.');
 }
 
-function deleteMaterial(id) {
+window.deleteMaterial = function(id) {
   if (confirm('Bu materialı silmək istədiyinizə əminsiniz?')) {
     database.ref('materials/' + id).remove().then(() => {
       showToast('Material silindi.');
@@ -196,8 +197,8 @@ function deleteMaterial(id) {
   }
 }
 
-// Alış Pəncərəsi və Gmail Bildiriş Simulyasiyası
-function openChat(id, title, author, price, card, phone) {
+// Alış Pəncərəsi
+window.openChat = function(id, title, author, price, card, phone) {
   document.getElementById('chat-product-title').innerText = title;
   document.getElementById('chat-seller-info').innerText = `Müəllif: ${author} | Nömrə: ${phone}`;
   document.getElementById('chat-price').innerText = `${price} AZN`;
@@ -207,7 +208,7 @@ function openChat(id, title, author, price, card, phone) {
   toggleModal('chat-modal');
 }
 
-function sendReceiptMessage(event) {
+window.sendReceiptMessage = function(event) {
   const container = document.getElementById('chat-messages');
   container.innerHTML += `
     <div class="flex justify-end">
