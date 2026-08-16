@@ -140,11 +140,7 @@
         </button>
     </div>
 
-    <!-- ========================================== -->
-    <!-- MODALLAR (ÇAT, YÜKLƏMƏ, QAYDALAR) -->
-    <!-- ========================================== -->
-
-    <!-- SATIN AL VƏ MƏHSUL ÇATI MODALI -->
+    <!-- MODALLAR -->
     <div id="buy-chat-modal" class="hidden fixed inset-0 bg-slate-950/80 backdrop-blur-sm flex items-center justify-center p-4 z-[100]">
         <div class="bg-[#0f111a] border border-slate-800 w-full max-w-md rounded-3xl p-6 relative shadow-2xl modal-anim flex flex-col max-h-[90vh]">
             <button type="button" onclick="closeModal('buy-chat-modal')" class="absolute top-4 right-4 text-slate-400 hover:text-white text-lg"><i class="fa-solid fa-xmark"></i></button>
@@ -172,7 +168,6 @@
         </div>
     </div>
 
-    <!-- İSTİFADƏÇİ-ADMİN ÇAT MODALI -->
     <div id="user-admin-chat-modal" class="hidden fixed inset-0 bg-slate-950/80 backdrop-blur-sm flex items-center justify-center p-4 z-[100]">
         <div class="bg-[#0f111a] border border-slate-800 w-full max-w-md rounded-3xl p-6 relative shadow-2xl modal-anim flex flex-col max-h-[80vh]">
             <button type="button" onclick="closeModal('user-admin-chat-modal')" class="absolute top-4 right-4 text-slate-400 hover:text-white text-lg"><i class="fa-solid fa-xmark"></i></button>
@@ -191,7 +186,6 @@
         </div>
     </div>
 
-    <!-- MATERIAL YÜKLƏ MODALI -->
     <div id="upload-modal" class="hidden fixed inset-0 bg-slate-950/80 backdrop-blur-sm flex items-center justify-center p-4 z-[100]">
         <div class="bg-[#0f111a] border border-slate-800 w-full max-w-md rounded-3xl p-6 relative shadow-2xl modal-anim">
             <button type="button" onclick="closeModal('upload-modal')" class="absolute top-4 right-4 text-slate-400 hover:text-white text-lg"><i class="fa-solid fa-xmark"></i></button>
@@ -211,7 +205,6 @@
         </div>
     </div>
 
-    <!-- RƏSMİ HÜQUQİ XƏBƏRDARLIQ MODALI -->
     <div id="legal-modal" class="hidden fixed inset-0 bg-slate-950/80 backdrop-blur-sm flex items-center justify-center p-4 z-[100]">
         <div class="bg-rose-950 border border-rose-600 w-full max-w-lg rounded-3xl p-6 relative shadow-2xl modal-anim max-h-[85vh] overflow-y-auto">
             <button type="button" onclick="closeModal('legal-modal')" class="absolute top-4 right-4 text-rose-400 hover:text-white text-lg"><i class="fa-solid fa-xmark"></i></button>
@@ -220,12 +213,11 @@
                 <p><strong>1. Dələduzluq və Saxtakarlıq (AR Cinayət Məcəlləsi - Maddə 178):</strong> Saxta qəbz göndərmək, ödəniş alıb materialı təqdim etməmək və ya insanları aldatmaq <u>AR CM-nin 178-ci maddəsinə (Dələduzluq)</u> əsasən cinayət məsuliyyəti yaradır və azadlıqdan məhrumetmə cəzası ilə nəticələnə bilər.</p>
                 <p><strong>2. Xırda Talama (AR İnzibati Xətalar Məcəlləsi - Maddə 227):</strong> Dəymiş ziyan 500 AZN-dən az olduqda <u>AR İXM-nin 227-ci maddəsinə</u> əsasən cərimə və ya inzibati həbs tətbiq edilir.</p>
                 <p><strong>3. Müəllif Hüquqları və Piratçılıq (AR CM - Maddə 165):</strong> Başqasına məxsus PDF, kitab və ya materialı icazəsiz sayta yükləyib satmaq <u>AR CM-nin 165-ci maddəsi (Müəllif hüquqlarını pozma)</u> ilə cinayət hesab olunur. Təkrar satılan materiallar dərhal silinir!</p>
-                <p class="bg-rose-900/60 p-2.5 rounded-xl border border-rose-500/40 text-[11px]"><strong>Qeyd:</strong> Bütün IP ünvanlar, daxil edilən kart nömrələri və yazışmalar sistemdə saxlanılır və qanunsuzluq olduqda Daxili İşlər Nazirliyinə (Kibercinayətkarlıqla Mübarizə İdarəsinə) təqdim edilir.</p>
+                <p class="bg-rose-900/60 p-2.5 rounded-xl border border-rose-500/40 text-[11px]"><strong>Qeyd:</strong> Bütün IP ünvanlar, daxil edilən kart nömrələri və yazışmalar sistemdə saxlanılır və qanunsuzluq olduqda Daxili İşlər Nazirliyinə təqdim edilir.</p>
             </div>
         </div>
     </div>
 
-    <!-- MÜƏLLİF QAYDALARI MODALI -->
     <div id="rules-modal" class="hidden fixed inset-0 bg-slate-950/80 backdrop-blur-sm flex items-center justify-center p-4 z-[100]">
         <div class="bg-[#100c24] border border-purple-500/50 w-full max-w-md rounded-3xl p-6 relative shadow-2xl modal-anim">
             <button type="button" onclick="closeModal('rules-modal')" class="absolute top-4 right-4 text-purple-400 hover:text-white text-lg"><i class="fa-solid fa-xmark"></i></button>
@@ -238,8 +230,10 @@
         </div>
     </div>
 
-    <!-- SATICI GİRİŞ MODALI -->
     <div id="seller-login-modal" class="hidden fixed inset-0 bg-slate-950/80 backdrop-blur-sm flex items-center justify-center p-4 z-[100]">
         <div class="bg-[#0f111a] border border-slate-800 w-full max-w-sm rounded-3xl p-6 relative shadow-2xl modal-anim">
             <button type="button" onclick="closeModal('seller-login-modal')" class="absolute top-4 right-4 text-slate-400 hover:text-white text-lg"><i class="fa-solid fa-xmark"></i></button>
-            <h3 class="text-base fo
+            <h3 class="text-base font-bold text-white mb-4">Satıcı Girişi</h3>
+            <div class="space-y-3">
+                <input type="email" id="login-email" placeholder="E-poçt" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-xs text-white outline-none">
+                <input type="password" id="login-pass" placeholder="Şifrə" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-xs t
