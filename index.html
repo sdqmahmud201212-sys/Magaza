@@ -8,25 +8,21 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         body { background-color: #05050f; color: #f8fafc; font-family: system-ui, sans-serif; }
-        .gradient-text { background: linear-gradient(to right, #a855f7, #ec4899); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
         @keyframes fadeIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
         .modal-anim { animation: fadeIn 0.2s ease-out forwards; }
         @keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
         @keyframes slideOut { from { transform: translateX(0); opacity: 1; } to { transform: translateX(100%); opacity: 0; } }
         .toast-in { animation: slideIn 0.3s ease forwards; }
         .toast-out { animation: slideOut 0.3s ease forwards; }
-        ::-webkit-scrollbar { width: 5px; }
-        ::-webkit-scrollbar-track { background: #0f172a; }
-        ::-webkit-scrollbar-thumb { background: #6b21a8; border-radius: 10px; }
     </style>
 </head>
-<body class="min-h-screen flex flex-col selection:bg-purple-500 selection:text-white pb-20">
+<body class="min-h-screen flex flex-col justify-between pb-20 selection:bg-purple-500 selection:text-white">
 
-    <!-- BİLDİRİŞ (TOAST) KONTEYNERİ -->
+    <!-- BİLDİRİŞ KONTEYNERİ -->
     <div id="toast-container" class="fixed top-5 right-5 z-[999] flex flex-col space-y-3 pointer-events-none"></div>
 
     <!-- ========================================== -->
-    <!-- 1. ƏSAS SƏHİFƏ (MAİN PAGE) -->
+    <!-- 1. ƏSAS SƏHİFƏ -->
     <!-- ========================================== -->
     <div id="page-main" class="block">
         <header class="sticky top-0 z-40 bg-[#0a0a16]/90 backdrop-blur-md border-b border-purple-900/30 shadow-lg">
@@ -41,10 +37,10 @@
                     </div>
                 </div>
                 <div class="flex items-center space-x-2">
-                    <button onclick="openModal('seller-login-modal')" class="bg-slate-800/80 hover:bg-slate-700 border border-purple-500/30 text-purple-300 px-3 py-2 rounded-xl text-[11px] font-bold transition flex items-center space-x-1.5">
+                    <button type="button" onclick="openModal('seller-login-modal')" class="bg-slate-800/80 hover:bg-slate-700 border border-purple-500/30 text-purple-300 px-3 py-2 rounded-xl text-[11px] font-bold transition flex items-center space-x-1.5 cursor-pointer">
                         <i class="fa-solid fa-user-shield"></i> <span class="hidden sm:inline">Satıcı Paneli</span>
                     </button>
-                    <button onclick="openModal('upload-modal')" class="bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 text-white px-3 py-2 rounded-xl text-[11px] font-bold shadow-[0_0_15px_rgba(168,85,247,0.4)] transition flex items-center space-x-1.5">
+                    <button type="button" onclick="openModal('upload-modal')" class="bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 text-white px-3 py-2 rounded-xl text-[11px] font-bold shadow-[0_0_15px_rgba(168,85,247,0.4)] transition flex items-center space-x-1.5 cursor-pointer">
                         <i class="fa-solid fa-plus"></i> <span>Material Yüklə</span>
                     </button>
                 </div>
@@ -61,7 +57,7 @@
                     <h2 class="text-[#fbbf24] font-black text-sm uppercase">⚠️ RƏSMİ HÜQUQİ XƏBƏRDARLIQ VƏ CİDDİ MƏSULİYYƏT BİLDİRİŞİ!</h2>
                     <p class="text-rose-200 text-[11px] font-semibold">DİQQƏT! BU QAYDALARIN POZULMASI AĞIR HÜQUQİ NƏTİCƏLƏR VƏ CİNAYƏT MƏSULİYYƏTİ İLƏ NƏTİCƏLƏNƏCƏK!</p>
                 </div>
-                <button onclick="openModal('legal-modal')" class="bg-rose-600 hover:bg-rose-500 text-white font-bold px-6 py-2.5 rounded-xl text-[11px] transition whitespace-nowrap shadow-lg shadow-rose-600/30">ƏTRAFLI OXU</button>
+                <button type="button" onclick="openModal('legal-modal')" class="bg-rose-600 hover:bg-rose-500 text-white font-bold px-6 py-2.5 rounded-xl text-[11px] transition whitespace-nowrap shadow-lg shadow-rose-600/30 cursor-pointer">ƏTRAFLI OXU</button>
             </div>
 
             <!-- MÜƏLLİF HÜQUQLARI -->
@@ -77,7 +73,7 @@
                         </div>
                     </div>
                 </div>
-                <button onclick="openModal('rules-modal')" class="bg-purple-600 hover:bg-purple-500 text-white font-bold px-8 py-2.5 rounded-xl text-[11px] transition shadow-lg shadow-purple-600/30">Qaydaları Oxu</button>
+                <button type="button" onclick="openModal('rules-modal')" class="bg-purple-600 hover:bg-purple-500 text-white font-bold px-8 py-2.5 rounded-xl text-[11px] transition shadow-lg shadow-purple-600/30 cursor-pointer">Qaydaları Oxu</button>
             </div>
 
             <!-- MƏHSULLAR -->
@@ -87,162 +83,203 @@
                     <span id="product-count" class="bg-slate-900 border border-slate-700 text-purple-300 text-[10px] font-bold px-4 py-1.5 rounded-full">0 material</span>
                 </div>
                 <div id="products-grid" class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <!-- Dinamik Məhsullar -->
-                    <div class="col-span-full text-center py-10 text-slate-500 text-xs">Yüklənir və ya baza boşdur...</div>
+                    <div class="col-span-full text-center py-10 text-slate-500 text-xs">Yüklənir...</div>
                 </div>
             </div>
         </main>
     </div>
 
     <!-- ========================================== -->
-    <!-- 2. SATICI PANELİ SƏHİFƏSİ (SEPARATE PAGE) -->
+    <!-- 2. SATICI PANELİ (SEPARATE PAGE) -->
     <!-- ========================================== -->
     <div id="page-seller" class="hidden fixed inset-0 bg-[#05050f] z-50 flex flex-col h-screen">
-        <header class="bg-slate-900 border-b border-purple-900 p-4 flex justify-between items-center shadow-md">
+        <header class="bg-slate-900 border-b border-purple-900 p-4 flex justify-between items-center">
             <h2 class="text-white font-bold text-sm flex items-center"><i class="fa-solid fa-chart-pie text-purple-500 mr-2"></i>Satıcı Paneli</h2>
-            <button onclick="showPage('page-main')" class="bg-rose-600/20 text-rose-400 border border-rose-500/30 px-4 py-1.5 rounded-lg text-xs font-bold hover:bg-rose-600 hover:text-white transition">Əsas Səhifəyə Qayıt</button>
+            <button type="button" onclick="showPage('page-main')" class="bg-rose-600/20 text-rose-400 border border-rose-500/30 px-4 py-1.5 rounded-lg text-xs font-bold hover:bg-rose-600 hover:text-white transition">Əsas Səhifəyə Qayıt</button>
         </header>
         <div class="flex-1 overflow-y-auto p-4 max-w-4xl w-full mx-auto space-y-6">
             <div class="bg-slate-900/50 p-4 rounded-2xl border border-slate-800">
-                <h3 class="text-xs font-bold text-slate-400 uppercase mb-3"><i class="fa-solid fa-box-open mr-1"></i>Sizin Məhsullarınız</h3>
+                <h3 class="text-xs font-bold text-slate-400 uppercase mb-3">Məhsullarınız</h3>
                 <div id="seller-products-list" class="space-y-3"></div>
             </div>
-            <div class="bg-slate-900/50 p-4 rounded-2xl border border-slate-800">
-                <h3 class="text-xs font-bold text-slate-400 uppercase mb-3"><i class="fa-solid fa-comments mr-1"></i>Alıcı Çatları (Aktiv)</h3>
-                <div id="seller-chats-list" class="space-y-3"></div>
-            </div>
         </div>
     </div>
 
     <!-- ========================================== -->
-    <!-- 3. ADMIN PANELİ SƏHİFƏSİ (SEPARATE PAGE) -->
+    <!-- 3. ADMIN PANELİ (SEPARATE PAGE) -->
     <!-- ========================================== -->
     <div id="page-admin" class="hidden fixed inset-0 bg-[#0f0c1b] z-50 flex flex-col h-screen">
-        <header class="bg-red-950 border-b border-red-900 p-4 flex justify-between items-center shadow-md">
-            <h2 class="text-white font-bold text-sm flex items-center"><i class="fa-solid fa-user-secret text-red-500 mr-2"></i>Sistem İdarəetməsi (Admin)</h2>
-            <button onclick="showPage('page-main')" class="bg-slate-800 text-white px-4 py-1.5 rounded-lg text-xs font-bold hover:bg-slate-700 border border-slate-700 transition">Çıxış Et</button>
+        <header class="bg-red-950 border-b border-red-900 p-4 flex justify-between items-center">
+            <h2 class="text-white font-bold text-sm flex items-center"><i class="fa-solid fa-user-secret text-red-500 mr-2"></i>Admin Paneli</h2>
+            <button type="button" onclick="showPage('page-main')" class="bg-slate-800 text-white px-4 py-1.5 rounded-lg text-xs font-bold hover:bg-slate-700 transition">Çıxış</button>
         </header>
-        <div class="flex-1 overflow-y-auto p-4 max-w-5xl w-full mx-auto grid grid-cols-1 md:grid-cols-2 gap-6">
-            <!-- Məhsullar Bölməsi -->
-            <div class="bg-slate-900/80 p-4 rounded-2xl border border-slate-800 h-fit">
-                <h3 class="text-white font-bold text-sm border-b border-slate-800 pb-2 mb-3"><i class="fa-solid fa-boxes-stacked mr-1"></i>Bütün Məhsullar</h3>
-                <div id="admin-products" class="space-y-3"></div>
-            </div>
-            <!-- Dəstək Çatları Bölməsi -->
-            <div class="bg-slate-900/80 p-4 rounded-2xl border border-slate-800 h-fit">
-                <h3 class="text-white font-bold text-sm border-b border-slate-800 pb-2 mb-3"><i class="fa-solid fa-headset mr-1"></i>Dəstək Mesajları</h3>
-                <div id="admin-support-list" class="space-y-3"></div>
-            </div>
+        <div class="flex-1 overflow-y-auto p-4 max-w-4xl w-full mx-auto space-y-4">
+            <h3 class="text-white font-bold text-sm border-b border-slate-800 pb-2">Bütün Məhsullar</h3>
+            <div id="admin-products" class="space-y-3"></div>
         </div>
     </div>
 
-    <!-- ========================================== -->
-    <!-- FLOATİNG DÜYMƏLƏR (SAĞ ALT KÜNC) -->
-    <!-- ========================================== -->
+    <!-- FLOATİNG DÜYMƏ LİSTİ (SAĞ ALT KÜNC) -->
     <div class="fixed bottom-4 right-4 z-40 flex flex-col space-y-2">
-        <button onclick="openSupportChat()" class="bg-blue-600 hover:bg-blue-500 text-white w-12 h-12 rounded-full shadow-[0_0_15px_rgba(37,99,235,0.5)] flex items-center justify-center text-xl transition">
-            <i class="fa-solid fa-headset"></i>
-        </button>
-        <button onclick="openModal('admin-login-modal')" class="bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-400 w-12 h-12 rounded-full shadow-lg flex items-center justify-center transition">
+        <button type="button" onclick="openModal('admin-login-modal')" class="bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-400 w-12 h-12 rounded-full shadow-lg flex items-center justify-center transition cursor-pointer">
             <i class="fa-solid fa-lock"></i>
         </button>
     </div>
 
-    <!-- ========================================== -->
     <!-- MODALLAR (QUTULAR) -->
-    <!-- ========================================== -->
-
-    <!-- Yükləmə Modalı -->
     <div id="upload-modal" class="hidden fixed inset-0 bg-slate-950/80 backdrop-blur-sm flex items-center justify-center p-4 z-[100]">
-        <div class="bg-[#0f111a] border border-slate-800 w-full max-w-md rounded-3xl p-6 relative shadow-2xl modal-anim max-h-[90vh] overflow-y-auto">
-            <button onclick="closeModal('upload-modal')" class="absolute top-4 right-4 text-slate-400 hover:text-white text-lg"><i class="fa-solid fa-xmark"></i></button>
+        <div class="bg-[#0f111a] border border-slate-800 w-full max-w-md rounded-3xl p-6 relative shadow-2xl modal-anim">
+            <button type="button" onclick="closeModal('upload-modal')" class="absolute top-4 right-4 text-slate-400 hover:text-white text-lg"><i class="fa-solid fa-xmark"></i></button>
             <h3 class="text-lg font-bold text-white mb-4"><i class="fa-solid fa-cloud-arrow-up text-purple-500 mr-2"></i>Material Yüklə</h3>
-            
-            <!-- FORM YOX, SADƏ DİV (SƏHİFƏ YENİLƏNMƏSİN DEYƏ) -->
             <div class="space-y-3">
-                <input type="text" id="up-title" placeholder="Materialın Başlığı" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-xs text-white focus:border-purple-500 outline-none">
-                <textarea id="up-desc" rows="2" placeholder="Məcburi Təsvir (Material haqqında)" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-xs text-white focus:border-purple-500 outline-none"></textarea>
+                <input type="text" id="up-title" placeholder="Materialın Başlığı" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-xs text-white outline-none">
+                <textarea id="up-desc" rows="2" placeholder="Təsviri" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-xs text-white outline-none"></textarea>
                 <div class="grid grid-cols-2 gap-3">
-                    <input type="number" id="up-price" placeholder="Qiymət (AZN)" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-xs text-white focus:border-purple-500 outline-none">
-                    <input type="text" id="up-card" placeholder="Kart Nömrəsi" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-xs text-white focus:border-purple-500 outline-none">
+                    <input type="number" id="up-price" placeholder="Qiymət (AZN)" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-xs text-white outline-none">
+                    <input type="text" id="up-card" placeholder="Kart Nömrəsi" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-xs text-white outline-none">
                 </div>
-                
-                <div class="border-t border-slate-800 my-2 pt-2"></div>
-                <p class="text-[10px] text-purple-400 font-bold uppercase mb-1">Satıcı Hesabı (Məcburi)</p>
-                <input type="email" id="up-email" placeholder="E-poçt ünvanınız" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-xs text-white focus:border-purple-500 outline-none">
-                <input type="password" id="up-pass" placeholder="Şifrəniz (Satıcı paneli üçün)" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-xs text-white focus:border-purple-500 outline-none">
-                
-                <div class="mt-3">
-                    <label class="block text-[10px] text-slate-400 mb-1">PDF Faylını Seçin (Maks 2MB)</label>
-                    <input type="file" id="up-file" accept="application/pdf" class="w-full text-xs text-slate-400 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-bold file:bg-purple-600/20 file:text-purple-400 hover:file:bg-purple-600/30 cursor-pointer">
-                </div>
-                
-                <!-- TYPE BUTTON QOYULDU Kİ FORM KİMİ İŞLƏMƏSİN -->
-                <button type="button" id="upload-btn" onclick="uploadProduct()" class="w-full bg-purple-600 hover:bg-purple-500 text-white font-bold py-3 mt-4 rounded-xl text-xs transition">Bazada Paylaş</button>
+                <input type="email" id="up-email" placeholder="E-poçtunuz" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-xs text-white outline-none">
+                <input type="password" id="up-pass" placeholder="Şifrəniz" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-xs text-white outline-none">
+                <input type="file" id="up-file" accept="application/pdf" class="w-full text-xs text-slate-400">
+                <button type="button" id="upload-btn" onclick="uploadProduct()" class="w-full bg-purple-600 hover:bg-purple-500 text-white font-bold py-3 rounded-xl text-xs transition cursor-pointer">Bazada Paylaş</button>
             </div>
         </div>
     </div>
 
-    <!-- Hüquqi Xəbərdarlıq Modalı -->
     <div id="legal-modal" class="hidden fixed inset-0 bg-slate-950/80 backdrop-blur-sm flex items-center justify-center p-4 z-[100]">
         <div class="bg-rose-950 border border-rose-600 w-full max-w-md rounded-3xl p-6 relative shadow-2xl modal-anim">
-            <button onclick="closeModal('legal-modal')" class="absolute top-4 right-4 text-rose-400 hover:text-white text-lg"><i class="fa-solid fa-xmark"></i></button>
+            <button type="button" onclick="closeModal('legal-modal')" class="absolute top-4 right-4 text-rose-400 hover:text-white text-lg"><i class="fa-solid fa-xmark"></i></button>
             <h3 class="text-base font-bold text-white mb-4"><i class="fa-solid fa-scale-balanced text-rose-500 mr-2"></i>Rəsmi Hüquqi Baza</h3>
-            <div class="space-y-3 text-[11px] text-rose-200 leading-relaxed">
-                <p>Bu platformada hər hansı aldatma, saxta qəbz göndərmə və ya ödənişi alıb materialı verməmə halları birbaşa <strong>Daxili İşlər Nazirliyinin (DİN) Kibercinayətkarlıqla Mübarizə İdarəsi</strong> tərəfindən izlənilir.</p>
-                <div class="bg-rose-900/50 p-3 rounded-xl border border-rose-500/30">
-                    <strong class="text-white">AR Cinayət Məcəlləsi - Maddə 178 (Dələduzluq):</strong> Etibardan sui-istifadə etmə və ya aldatma yolu ilə özgənin əmlakını ələ keçirmə cinayət məsuliyyəti yaradır.
-                </div>
-                <div class="bg-rose-900/50 p-3 rounded-xl border border-rose-500/30">
-                    <strong class="text-white">AR İnzibati Xətalar Məcəlləsi - Maddə 227 (Xırda talama):</strong> Ziyanın miqdarı 500 AZN-dən az olduqda belə inzibati həbs və ya cərimə tətbiq olunur.
-                </div>
-            </div>
+            <p class="text-xs text-rose-200">Bu platformada hər hansı aldatma halları birbaşa Kibercinayətkarlıqla Mübarizə İdarəsi tərəfindən izlənilir.</p>
         </div>
     </div>
 
-    <!-- Qaydalar Modalı -->
     <div id="rules-modal" class="hidden fixed inset-0 bg-slate-950/80 backdrop-blur-sm flex items-center justify-center p-4 z-[100]">
         <div class="bg-[#100c24] border border-purple-500/50 w-full max-w-md rounded-3xl p-6 relative shadow-2xl modal-anim">
-            <button onclick="closeModal('rules-modal')" class="absolute top-4 right-4 text-purple-400 hover:text-white text-lg"><i class="fa-solid fa-xmark"></i></button>
-            <h3 class="text-base font-bold text-white mb-4"><i class="fa-solid fa-shield-cat text-purple-500 mr-2"></i>Müəllif Hüquqları Qaydaları</h3>
-            <div class="space-y-3 text-xs text-slate-300 leading-relaxed">
-                <p>Sistem fayl adını bazada yoxlayır. Əgər <strong>eyni adlı</strong> fayl artıq bazada mövcuddursa, onun ikinci dəfə yüklənməsinə qəti şəkildə icazə verilmir.</p>
-                <p>Yalnız müəllif (satıcı) və ya Admin həmin məhsulu sildikdən sonra həmin faylı yenidən yükləmək mümkündür.</p>
-            </div>
-            <button onclick="closeModal('rules-modal')" class="w-full mt-5 bg-purple-600 text-white py-2 rounded-xl text-xs font-bold">Aydındır</button>
+            <button type="button" onclick="closeModal('rules-modal')" class="absolute top-4 right-4 text-purple-400 hover:text-white text-lg"><i class="fa-solid fa-xmark"></i></button>
+            <h3 class="text-base font-bold text-white mb-4">Müəllif Hüquqları Qaydaları</h3>
+            <p class="text-xs text-slate-300">Eyni adlı fayl 2-ci dəfə bazaya yüklənə bilməz.</p>
         </div>
     </div>
 
-    <!-- Satıcı Giriş Modalı -->
     <div id="seller-login-modal" class="hidden fixed inset-0 bg-slate-950/80 backdrop-blur-sm flex items-center justify-center p-4 z-[100]">
         <div class="bg-[#0f111a] border border-slate-800 w-full max-w-sm rounded-3xl p-6 relative shadow-2xl modal-anim">
-            <button onclick="closeModal('seller-login-modal')" class="absolute top-4 right-4 text-slate-400 hover:text-white text-lg"><i class="fa-solid fa-xmark"></i></button>
-            <div class="text-center mb-6">
-                <div class="w-12 h-12 bg-purple-900/30 text-purple-400 rounded-full flex items-center justify-center mx-auto mb-2 text-xl border border-purple-500/30"><i class="fa-solid fa-user-lock"></i></div>
-                <h3 class="text-base font-bold text-white">Satıcı Panelinə Giriş</h3>
-            </div>
-            <div class="space-y-4">
-                <input type="email" id="login-email" placeholder="E-poçt ünvanınız" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-xs text-white outline-none focus:border-purple-500">
-                <input type="password" id="login-pass" placeholder="Şifrəniz" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-xs text-white outline-none focus:border-purple-500">
-                <button type="button" onclick="sellerLogin()" class="w-full bg-purple-600 hover:bg-purple-500 text-white font-bold py-3 rounded-xl text-xs transition shadow-lg shadow-purple-600/30">Daxil Ol</button>
+            <button type="button" onclick="closeModal('seller-login-modal')" class="absolute top-4 right-4 text-slate-400 hover:text-white text-lg"><i class="fa-solid fa-xmark"></i></button>
+            <h3 class="text-base font-bold text-white mb-4">Satıcı Girişi</h3>
+            <div class="space-y-3">
+                <input type="email" id="login-email" placeholder="E-poçt" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-xs text-white outline-none">
+                <input type="password" id="login-pass" placeholder="Şifrə" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-xs text-white outline-none">
+                <button type="button" onclick="sellerLogin()" class="w-full bg-purple-600 hover:bg-purple-500 text-white font-bold py-3 rounded-xl text-xs transition cursor-pointer">Daxil Ol</button>
             </div>
         </div>
     </div>
 
-    <!-- Admin Giriş Modalı -->
     <div id="admin-login-modal" class="hidden fixed inset-0 bg-slate-950/90 backdrop-blur-sm flex items-center justify-center p-4 z-[100]">
         <div class="bg-slate-900 border border-slate-700 w-full max-w-xs rounded-3xl p-6 text-center shadow-2xl modal-anim relative">
-            <button onclick="closeModal('admin-login-modal')" class="absolute top-4 right-4 text-slate-400 hover:text-white text-lg"><i class="fa-solid fa-xmark"></i></button>
+            <button type="button" onclick="closeModal('admin-login-modal')" class="absolute top-4 right-4 text-slate-400 hover:text-white text-lg"><i class="fa-solid fa-xmark"></i></button>
             <h3 class="text-white font-bold mb-4">Admin Kodu</h3>
-            <input type="password" id="admin-code-input" placeholder="9 rəqəmli kod" maxlength="9" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-center text-lg tracking-widest text-white focus:border-purple-500 mb-4 outline-none">
-            <button onclick="verifyAdmin()" class="w-full bg-white text-black font-bold py-3 rounded-xl text-xs">Panelə Keç</button>
+            <input type="password" id="admin-code-input" placeholder="9 rəqəmli kod" maxlength="9" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-center text-lg text-white mb-4 outline-none">
+            <button type="button" onclick="verifyAdmin()" class="w-full bg-white text-black font-bold py-3 rounded-xl text-xs cursor-pointer">Panelə Keç</button>
         </div>
     </div>
 
-    <!-- Məhsul Alqı-Satqı Çat Modalı -->
-    <div id="chat-modal" class="hidden fixed inset-0 bg-slate-950/90 backdrop-blur-sm flex items-center justify-center p-2 sm:p-4 z-[110]">
-        <div class="bg-[#0f111a] border border-slate-700 w-full max-w-md h-[85vh] rounded-3xl flex flex-col shadow-2xl modal-anim overflow-hidden">
-            <div class="bg-slate-900 border-b border-slate-800 p-3 sm:p-4 flex items-center justify-between">
-                <div>
-                    <h3 id="chat-title" class="text-sm font-bold text-white">Məhsul Adı</h3>
-                    <p id="chat-subtitle" class="text-[10px] tex
+    <script>
+        const DB_URL = "https://magaza-f54b4-default-rtdb.europe-west1.firebasedatabase.app";
+        const ADMIN_CODE = "748392015";
+        let allProducts = {};
+
+        document.addEventListener("DOMContentLoaded", () => {
+            fetchProducts();
+            setInterval(fetchProducts, 4000);
+        });
+
+        function showPage(pageId) {
+            document.getElementById('page-main').classList.add('hidden');
+            document.getElementById('page-seller').classList.add('hidden');
+            document.getElementById('page-admin').classList.add('hidden');
+            document.getElementById(pageId).classList.remove('hidden');
+        }
+
+        function openModal(id) { document.getElementById(id).classList.remove('hidden'); }
+        function closeModal(id) { document.getElementById(id).classList.add('hidden'); }
+
+        function showToast(message, type = 'success') {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            let bg = type === 'error' ? 'bg-rose-600' : 'bg-emerald-600';
+            toast.className = `flex items-center space-x-2 text-white px-4 py-3 rounded-xl shadow-xl text-xs font-bold ${bg} toast-in`;
+            toast.innerHTML = `<span>${message}</span>`;
+            container.appendChild(toast);
+            setTimeout(() => { toast.classList.replace('toast-in', 'toast-out'); setTimeout(() => toast.remove(), 300); }, 3000);
+        }
+
+        async function fetchProducts() {
+            try {
+                const res = await fetch(`${DB_URL}/materials.json`);
+                const data = await res.json();
+                allProducts = data || {};
+                renderMainProducts();
+            } catch(e) {}
+        }
+
+        function renderMainProducts() {
+            const grid = document.getElementById('products-grid');
+            grid.innerHTML = '';
+            let count = 0;
+            for (let key in allProducts) {
+                const p = allProducts[key];
+                count++;
+                grid.innerHTML += `
+                <div class="bg-[#0f111a] border border-slate-800 rounded-3xl p-5 shadow-lg flex flex-col justify-between">
+                    <div>
+                        <div class="flex justify-between items-start mb-2">
+                            <span class="bg-purple-900/30 text-purple-400 text-[9px] font-bold px-2 py-1 rounded-md">PDF</span>
+                            <span class="text-emerald-400 font-bold text-sm">${p.price} AZN</span>
+                        </div>
+                        <h3 class="text-white font-bold text-sm">${p.title}</h3>
+                        <p class="text-slate-400 text-[11px] my-2">${p.description || ''}</p>
+                    </div>
+                </div>`;
+            }
+            if (count === 0) grid.innerHTML = `<div class="col-span-full text-center py-10 text-slate-500 text-xs">Məhsul yoxdur.</div>`;
+            document.getElementById('product-count').innerText = `${count} material`;
+        }
+
+        async function uploadProduct() {
+            const title = document.getElementById('up-title').value.trim();
+            const desc = document.getElementById('up-desc').value.trim();
+            const price = document.getElementById('up-price').value.trim();
+            const card = document.getElementById('up-card').value.trim();
+            const email = document.getElementById('up-email').value.trim().toLowerCase();
+            const pass = document.getElementById('up-pass').value.trim();
+            const fileInput = document.getElementById('up-file');
+
+            if (!title || !price || !email || !pass || !fileInput.files.length) return showToast("Məlumatları tam doldurun", "error");
+
+            const newProduct = { title, description: desc, price, cardNumber: card, sellerEmail: email, sellerPassword: pass, fileName: fileInput.files[0].name };
+            
+            await fetch(`${DB_URL}/materials.json`, { method: 'POST', body: JSON.stringify(newProduct) });
+            showToast("Məhsul əlavə olundu!");
+            closeModal('upload-modal');
+            fetchProducts();
+        }
+
+        function sellerLogin() {
+            const em = document.getElementById('login-email').value.trim().toLowerCase();
+            const ps = document.getElementById('login-pass').value.trim();
+            let found = false;
+            for (let k in allProducts) {
+                if (allProducts[k].sellerEmail === em && allProducts[k].sellerPassword === ps) found = true;
+            }
+            if (found) { closeModal('seller-login-modal'); showPage('page-seller'); } 
+            else showToast("Məlumatlar yanlışdır", "error");
+        }
+
+        function verifyAdmin() {
+            const code = document.getElementById('admin-code-input').value;
+            if (code === ADMIN_CODE) { closeModal('admin-login-modal'); showPage('page-admin'); } 
+            else showToast("Kod yanlışdır", "error");
+        }
+    </script>
+</body>
+</html>
