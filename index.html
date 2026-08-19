@@ -63,7 +63,7 @@
     </div>
   </main>
 
-  <!-- MODAL: YÜKLƏMƏ VƏ TƏSVİR (DESCRIPTION) MƏLUMATLARI -->
+  <!-- MODAL: YÜKLƏMƏ VƏ TƏSVİR MƏLUMATLARI -->
   <div id="upload-modal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-4 z-50 hidden">
     <div class="bg-slate-900 border border-slate-800 w-full max-w-lg rounded-3xl p-6 relative shadow-2xl space-y-4 max-h-[90vh] overflow-y-auto">
       <button onclick="closeModal()" class="absolute top-4 right-4 text-slate-400 hover:text-white text-lg cursor-pointer">
@@ -107,7 +107,7 @@
     </div>
   </div>
 
-  <!-- MODAL: SİLİNMƏ VƏ ADMIN ÜÇÜN 5 RƏQƏMLİ KOD PANELİ -->
+  <!-- MODAL: SİLİNMƏ VƏ ADMIN ŞİFRƏ PANELİ -->
   <div id="delete-modal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-4 z-50 hidden">
     <div class="bg-slate-900 border border-slate-800 w-full max-w-sm rounded-3xl p-6 relative shadow-2xl space-y-4 text-center">
       <button onclick="closeDeleteModal()" class="absolute top-4 right-4 text-slate-400 hover:text-white text-lg cursor-pointer">
@@ -119,11 +119,7 @@
       </div>
 
       <h3 class="text-base font-bold text-white">Admin Təsdiqi Tələb Olunur</h3>
-      <p class="text-xs text-slate-400">Materialı silmək üçün 5 rəqəmli təhlükəsizlik kodunu daxil edin:</p>
-      
-      <div id="hint-code-box" class="bg-slate-950 border border-purple-500/30 text-purple-400 font-mono font-bold text-sm py-1.5 rounded-xl tracking-widest">
-        Kod: Yüklənir...
-      </div>
+      <p class="text-xs text-slate-400">Materialı silmək üçün yalnız adminə məxsus gizli kodu daxil edin:</p>
 
       <input type="password" id="admin-code-input" maxlength="5" placeholder="*****" class="w-full bg-slate-950 border border-slate-800 rounded-2xl px-4 py-3 text-center text-lg tracking-widest text-white focus:outline-none focus:border-purple-500">
 
@@ -187,13 +183,14 @@
   <script>
     const DATABASE_URL = "https://magaza-f54b4-default-rtdb.europe-west1.firebasedatabase.app";
     
-    let currentRandomCode = String(Math.floor(10000 + Math.random() * 90000));
+    // TƏK CƏ SƏNİN BİLDİYİN SABİT ADMİN KODU
+    const SECRET_ADMIN_CODE = "78901"; 
+    
     let itemKeyToDelete = null;
 
     document.addEventListener("DOMContentLoaded", () => {
       fetchProducts();
       setInterval(fetchProducts, 3000);
-      document.getElementById('hint-code-box').innerText = `Admin Kod: ${currentRandomCode}`;
     });
 
     function showToast(message, type = 'success') {
@@ -318,8 +315,6 @@
 
     function promptDelete(key) {
       itemKeyToDelete = key;
-      currentRandomCode = String(Math.floor(10000 + Math.random() * 90000));
-      document.getElementById('hint-code-box').innerText = `Admin Kod: ${currentRandomCode}`;
       document.getElementById('admin-code-input').value = '';
       document.getElementById('delete-modal').classList.remove('hidden');
     }
@@ -327,8 +322,8 @@
     async function verifyAndDelete() {
       const enteredCode = document.getElementById('admin-code-input').value.trim();
 
-      if (enteredCode !== currentRandomCode) {
-        showToast("Daxil etdiyiniz 5 rəqəmli kod səhvdir!", "error");
+      if (enteredCode !== SECRET_ADMIN_CODE) {
+        showToast("Gizli kod səhvdir! Giriş rədd edildi.", "error");
         return;
       }
 
